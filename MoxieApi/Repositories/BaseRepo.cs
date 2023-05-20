@@ -1,17 +1,25 @@
 ﻿using Microsoft.Data.SqlClient;
+using MoxieApi.Attributes;
 using MoxieApi.Models;
+using System.Diagnostics.Metrics;
+using System.Reflection;
+using System.Text;
 
 namespace MoxieApi.Repositories;
 
-public class BaseRepository<T> where T : IBaseEntity
+public class BaseRepository<T> : IBaseRepository<T> where T : IBaseEntity
 {
     private readonly string _connectionString;
 
-    private readonly T _entity;
+    private readonly List<string> _tableColumns;
+
+    private string _tableName;
 
     public BaseRepository(IConfiguration configuration)
     {
         _connectionString = configuration.GetConnectionString("DefaultConnection");
+        _tableColumns = new List<string>();
+        SetupTableData();
     }
 
     protected SqlConnection Connection
@@ -22,7 +30,7 @@ public class BaseRepository<T> where T : IBaseEntity
         }
     }
 
-    public List <T> GetAll()
+    public List<T> GetAll()
     {
         using (var conn = Connection)
         {
@@ -30,8 +38,8 @@ public class BaseRepository<T> where T : IBaseEntity
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText = $@"
-                                    SELECT {_entity.GetSelectAllStatement()}
-                                    FROM {_entity.GetTableName()}";
+                                    SELECT {CreateSelectAllStatement()}
+                                    FROM {_tableName}";
                 var reader = cmd.ExecuteReader();
                 List<T> list = new List<T>();
                 while (reader.Read())
@@ -54,8 +62,8 @@ public class BaseRepository<T> where T : IBaseEntity
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText = $@"
-                                    SELECT {_entity.GetSelectAllStatement()}
-                                    FROM {_entity.GetTableName()}
+                                    SELECT {CreateSelectAllStatement()}
+                                    FROM {_tableName}
                                     WHERE {id} = @Id";
                 var reader = cmd.ExecuteReader();
                 T item = default(T);
@@ -70,7 +78,7 @@ public class BaseRepository<T> where T : IBaseEntity
         }
     }
 
-   public void Add(T type)
+    public void Add(T type)
     {
 
     }
@@ -81,4 +89,44 @@ public class BaseRepository<T> where T : IBaseEntity
     }
 
     public void Delete(int id) { }
+
+
+    private void SetupTableData()
+    {
+        Attribute[] attrs = Attribute.GetCustomAttributes(typeof(T));
+        foreach (Attribute attr in attrs)
+        {
+            if (attr is DbTableAttribute t)
+            {
+                _tableName = t.Name;
+            }
+        }
+        var props = typeof(T).GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(DbColumnAttribute)));
+
+        foreach (PropertyInfo prop in props)
+        {
+            var attr = prop.GetCustomAttribute<DbColumnAttribute>(true);
+
+            if (attr != null)
+            {
+                _tableColumns.Add(attr.Name);
+            }
+
+        }
+
+    }
+
+    private string CreateSelectAllStatement()
+    {
+        StringBuilder sb = new StringBuilder();
+
+
+
+        foreach (string column in _tableColumns)
+        {
+            sb.Append($"{_tableName + "." + column} as '{_tableName + "." + column}',");
+        }
+
+        return sb.ToString().Remove(sb.Length - 1, 1);
+    }
 }

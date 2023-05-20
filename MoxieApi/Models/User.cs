@@ -1,9 +1,11 @@
 ﻿using Microsoft.Data.SqlClient;
+using MoxieApi.Attributes;
 using MoxieApi.Utils;
 using System.Xml.Linq;
 
 namespace MoxieApi.Models;
 
+[DbTable("[Moxie].[dbo].[User]")]
 public class User : IdEntity, IBaseEntity
 {
     /// <summary>
@@ -15,7 +17,7 @@ public class User : IdEntity, IBaseEntity
     ///
     public User(SqlDataReader reader)
     {
-        Id = DbUtils.GetString(reader, COLUMNS.Id);
+        Id = DbUtils.GetGuid(reader, COLUMNS.Id);
         Uid = DbUtils.GetString(reader, COLUMNS.Uid);
         FirstName = DbUtils.GetString(reader, COLUMNS.FirstName);
         LastName = DbUtils.GetString(reader, COLUMNS.LastName);
@@ -26,11 +28,23 @@ public class User : IdEntity, IBaseEntity
     }
 
     public User() { }
+
+    [DbColumn("[Uid]")]
     public string Uid { get; set; }
+
+    [DbColumn("[FirstName]")]
     public string FirstName { get; set; }
+
+    [DbColumn("[LastName]")]
     public string LastName { get; set; }
+
+    [DbColumn("[ImageUrl]")]
     public string ImageUrl { get; set; }
+
+    [DbColumn("[DateCreated]")]
     public DateTime DateCreated { get; set; }
+
+    [DbColumn("[DateLastModified]")]
     public DateTime DateLastModified { get; set; }
 
     public static class TABLE

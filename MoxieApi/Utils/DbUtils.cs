@@ -25,6 +25,17 @@ namespace MoxieApi.Utils
             return reader.GetString(ordinal);
         }
 
+        public static Guid? GetGuid(SqlDataReader reader, string column)
+        {
+            var ordinal = reader.GetOrdinal(column);
+            if (reader.IsDBNull(ordinal))
+            {
+                return null;
+            }
+            return reader.GetGuid(ordinal);
+
+        }
+
         public static string? GetNullableString(SqlDataReader reader, string column)
         {
             var ordinal = reader.GetOrdinal(column);

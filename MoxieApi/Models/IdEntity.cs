@@ -1,8 +1,11 @@
-﻿namespace MoxieApi.Models;
+﻿using MoxieApi.Attributes;
+
+namespace MoxieApi.Models;
 
 public abstract class IdEntity
 {
-    public  string Id { get; set; }
+    [DbColumn("[Id]")]
+    public Guid? Id { get; set; }
 
 }
 
