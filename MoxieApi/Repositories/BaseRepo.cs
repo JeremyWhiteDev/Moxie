@@ -30,8 +30,8 @@ public class BaseRepository<T> where T : IBaseEntity
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText = $@"
-                                    SELECT {_entity.getSelectAllStatement()}
-                                    FROM {_entity.getTableName()}";
+                                    SELECT {_entity.GetSelectAllStatement()}
+                                    FROM {_entity.GetTableName()}";
                 var reader = cmd.ExecuteReader();
                 List<T> list = new List<T>();
                 while (reader.Read())
