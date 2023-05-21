@@ -33,4 +33,11 @@ public class UserController : ControllerBase
     {
         return Ok(_userService.Add(user));
     }
+
+    [HttpPut("{id}")]
+    public IActionResult Update(User user, Guid id)
+    {
+        _userService.Update(user, id);
+        return NoContent();
+    }
 }

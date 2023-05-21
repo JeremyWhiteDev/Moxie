@@ -28,4 +28,9 @@ public class UserService : IUserService
     {
         return _repo.Add(user);
     }
+
+    public void Update(User user, Guid id)
+    {
+        _repo.Update(user, id);
+    }
 }

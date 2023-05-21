@@ -7,4 +7,5 @@ public interface IUserService
     List<User> GetAll();
     User GetById(Guid id);
     Guid Add(User user);
+    void Update(User user, Guid id);
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.VisualBasic;
 using MoxieApi.Attributes;
 using MoxieApi.Models;
 using MoxieApi.Utils;
@@ -39,7 +40,7 @@ public class BaseRepository<T>
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText = $@"
-                                    SELECT {CreateSelectAllStatement()}
+                                    SELECT {CreateSelectAllString()}
                                     FROM {_tableName}";
                 var reader = cmd.ExecuteReader();
                 List<T> list = new List<T>();
@@ -63,7 +64,7 @@ public class BaseRepository<T>
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText = $@"
-                                    SELECT {CreateSelectAllStatement()}
+                                    SELECT {CreateSelectAllString()}
                                     FROM {_tableName}
                                     WHERE {GetIdColumnName()} = @Id";
                 DbUtils.AddParameter(cmd, "@Id", id);
@@ -82,18 +83,6 @@ public class BaseRepository<T>
 
     public Guid Add(T obj)
     {
-        //I need the table name, DONE,
-        //all the column names in a csv format, DONE
-        //and attaching values from T type. dynamically, creating unique string values with @. Take the same list from above, at @ to each one.
-        //Dynamically loop over the column list.
-        //  for each one, I'm going to pass the
-        //      cmd,
-        //      the @string variable,
-        //      the property that we are assigning it from. HARDEST PART.
-        // loop over type properties, first or default for the current db attribute name.
-        // get the value of that property, send it to top level DbUtils.
-
-        var items = _tableColumns.Values.Select(x => x.columnName.ToString()).ToList();
         using (var conn = Connection)
         {
             conn.Open();
@@ -105,16 +94,31 @@ public class BaseRepository<T>
                                     OUTPUT INSERTED.Id
                                     VALUES ({String.Join(",", _tableColumns.Values.Select(x => x.parameterName.ToString()).ToList())})";
                 DbUtils.AddParameterList(cmd, _tableColumns, obj);
-                cmd.ExecuteNonQuery();
-                return Guid.NewGuid();
+                return (Guid)cmd.ExecuteScalar();
+                
                 
             }
         }
     }
 
-    public void Update(T type)
+    public void Update(T obj, Guid id)
     {
+        using (var conn = Connection)
+        {
+            conn.Open();
+            using (var cmd = conn.CreateCommand())
+            {
 
+
+                cmd.CommandText = $@"
+                                    UPDATE {_tableName}
+                                    SET {CreateUpdateString()}
+                                    WHERE {GetIdColumnName()} = @EntityId";
+                DbUtils.AddParameter(cmd, "@EntityId", id);
+                DbUtils.AddParameterList(cmd, _tableColumns, obj);
+                cmd.ExecuteNonQuery();
+            }
+        }
     }
 
     public void Delete(int id) { }
@@ -152,7 +156,7 @@ public class BaseRepository<T>
         return IdColumn.Value.columnName.ToString();
     }
 
-    private string CreateSelectAllStatement()
+    private string CreateSelectAllString()
     {
         StringBuilder sb = new StringBuilder();
 
@@ -161,6 +165,24 @@ public class BaseRepository<T>
         foreach (KeyValuePair<PropertyInfo, (string columnName, string parameterName)> column in _tableColumns)
         {
             sb.Append($"{column.Value.columnName} as '{column.Value.columnName}',");
+        }
+
+        return sb.ToString().Remove(sb.Length - 1, 1);
+    }
+
+    private string CreateUpdateString()
+    {
+        StringBuilder sb = new StringBuilder();
+
+
+
+        foreach (KeyValuePair<PropertyInfo, (string columnName, string parameterName)> column in _tableColumns)
+        {
+            if (column.Value.columnName.Contains("[Id]"))
+            {
+                continue;
+            }
+            sb.Append($"{column.Value.columnName} = {column.Value.parameterName},");
         }
 
         return sb.ToString().Remove(sb.Length - 1, 1);

@@ -8,6 +8,6 @@ namespace MoxieApi.Repositories
         void Delete(int id);
         List<T> GetAll();
         T GetById(Guid id);
-        void Update(T type);
+        void Update(T type, Guid id);
     }
 }
