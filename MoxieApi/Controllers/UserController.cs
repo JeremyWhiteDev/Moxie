@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MoxieApi.Models;
 using MoxieApi.Services;
 
 namespace MoxieApi.Controllers;
@@ -25,5 +26,11 @@ public class UserController : ControllerBase
     public IActionResult GetById(Guid id)
     {
         return Ok(_userService.GetById(id));
+    }
+
+    [HttpPost]
+    public IActionResult Add(User user)
+    {
+        return Ok(_userService.Add(user));
     }
 }

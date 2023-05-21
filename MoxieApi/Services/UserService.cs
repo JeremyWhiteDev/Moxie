@@ -23,4 +23,9 @@ public class UserService : IUserService
     {
         return _repo.GetById(id);
     }
+
+    public Guid Add(User user)
+    {
+        return _repo.Add(user);
+    }
 }

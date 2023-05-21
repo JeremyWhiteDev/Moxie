@@ -12,14 +12,14 @@ public class BaseRepository<T>
 {
     private readonly string _connectionString;
 
-    private readonly Dictionary<PropertyInfo, string> _tableColumns;
+    private readonly Dictionary<PropertyInfo, (string columnName, string parameterName)> _tableColumns;
 
     private string _tableName;
 
     public BaseRepository(IConfiguration configuration)
     {
         _connectionString = configuration.GetConnectionString("DefaultConnection");
-        _tableColumns = new Dictionary<PropertyInfo, string>();
+        _tableColumns = new Dictionary<PropertyInfo, (string, string)>();
         SetupTableData();
     }
 
@@ -80,7 +80,7 @@ public class BaseRepository<T>
         }
     }
 
-    public void Add(T obj)
+    public Guid Add(T obj)
     {
         //I need the table name, DONE,
         //all the column names in a csv format, DONE
@@ -92,9 +92,8 @@ public class BaseRepository<T>
         //      the property that we are assigning it from. HARDEST PART.
         // loop over type properties, first or default for the current db attribute name.
         // get the value of that property, send it to top level DbUtils.
-        var parameterNames = GetParameterNames();
 
-        var props = typeof(T).GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(DbColumnAttribute)));
+        var items = _tableColumns.Values.Select(x => x.columnName.ToString()).ToList();
         using (var conn = Connection)
         {
             conn.Open();
@@ -102,11 +101,13 @@ public class BaseRepository<T>
             {
                 cmd.CommandText = $@"
                                     INSERT INTO {_tableName}
-                                    ({String.Join(",", _tableColumns)})
+                                    ({String.Join(",", _tableColumns.Values.Select(x => x.columnName.ToString()).ToList())})
                                     OUTPUT INSERTED.Id
-                                    VALUES {String.Join(",", parameterNames)}";
-                //DbUtils.AddParameterList(cmd, parameterNames, _tableColumns, props, obj);
-                var id = cmd.ExecuteScalar();
+                                    VALUES ({String.Join(",", _tableColumns.Values.Select(x => x.parameterName.ToString()).ToList())})";
+                DbUtils.AddParameterList(cmd, _tableColumns, obj);
+                cmd.ExecuteNonQuery();
+                return Guid.NewGuid();
+                
             }
         }
     }
@@ -137,28 +138,18 @@ public class BaseRepository<T>
 
             if (attr != null)
             {
-                _tableColumns.Add(prop, attr.Name);
+                _tableColumns.Add(prop, (columnName: attr.Name, parameterName: "@"+prop.Name));
             }
 
         }
 
     }
 
-    private List<string> GetParameterNames()
-    {
-        var parameterArr = new List<string>(); 
-        foreach (KeyValuePair<PropertyInfo, string> column in _tableColumns)
-        {
-            parameterArr.Add("@"+column.Value);
-        }
-        return parameterArr;
-       
-    }
 
     private string GetIdColumnName()
     {
-        var IdColumn = _tableColumns.FirstOrDefault(c => c.Value.Contains("[Id]"));
-        return IdColumn.Value.ToString();
+        var IdColumn = _tableColumns.FirstOrDefault(c => c.Value.columnName.Contains("[Id]"));
+        return IdColumn.Value.columnName.ToString();
     }
 
     private string CreateSelectAllStatement()
@@ -167,9 +158,9 @@ public class BaseRepository<T>
 
 
 
-        foreach (KeyValuePair<PropertyInfo, string> column in _tableColumns)
+        foreach (KeyValuePair<PropertyInfo, (string columnName, string parameterName)> column in _tableColumns)
         {
-            sb.Append($"{column.Value} as '{column.Value}',");
+            sb.Append($"{column.Value.columnName} as '{column.Value.columnName}',");
         }
 
         return sb.ToString().Remove(sb.Length - 1, 1);

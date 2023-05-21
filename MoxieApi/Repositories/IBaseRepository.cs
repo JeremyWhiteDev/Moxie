@@ -4,7 +4,7 @@ namespace MoxieApi.Repositories
 {
     public interface IBaseRepository<T> 
     {
-        void Add(T type);
+        Guid Add(T type);
         void Delete(int id);
         List<T> GetAll();
         T GetById(Guid id);

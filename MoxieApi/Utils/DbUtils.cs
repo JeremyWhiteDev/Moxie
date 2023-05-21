@@ -177,29 +177,23 @@ public static class DbUtils
     /// <param name="cmd">The command to which to add the parameter.</param>
     /// <param name="name">The name of the parameter.</param>
     /// <param name="value">The value of the parameter. May be null.</param>
-    //public static void AddParameterList(SqlCommand cmd, List<string> parameterNames, List<string> columnNames, IEnumerable<PropertyInfo> props, object obj)
-    //{
-    //    foreach(string cName in columnNames)
-    //    {
-    //        //parameter is "@thisColumn"
-    //        //column names is "thisColumn"
-    //        //pops is List<Prop Info> like  Guid string, datetime datecreated, etc.
+    public static void AddParameterList(SqlCommand cmd, Dictionary<PropertyInfo, (string columnNames, string parameterNames)> columnDict, object obj)
+    {
 
-    //        var currentProp = props.FirstOrDefault(p => p.GetCustomAttribute<DbColumnAttribute>(true).Name == cName);
+        foreach (KeyValuePair<PropertyInfo, (string columnName, string parameterName)> column in columnDict)
+        {
+            var value =  column.Key.GetValue(obj, null);
 
-    //        //need to pass in the current obj
-    //        cmd.Parameters.AddWithValue(parameterName, currentProp.GetValue(obj));
-
-    //    }
-    //    if (value == null)
-    //    {
-    //        cmd.Parameters.AddWithValue(name, DBNull.Value);
-    //    }
-    //    else
-    //    {
-    //        cmd.Parameters.AddWithValue(name, value);
-    //    }
-    //}
+            if (value == null)
+            {
+                cmd.Parameters.AddWithValue(column.Value.parameterName, DBNull.Value);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue(column.Value.parameterName, value);
+            }
+        }
+    }
 
 
     /// <summary>
