@@ -1,81 +1,36 @@
 ﻿using Microsoft.Data.SqlClient;
 using MoxieApi.Attributes;
 using MoxieApi.Utils;
+using System.Reflection;
 using System.Xml.Linq;
 
 namespace MoxieApi.Models;
 
 [DbTable("[Moxie].[dbo].[User]")]
-public class User : IdEntity, IBaseEntity
+public class User : BaseEntity<User>, IBaseEntity
 {
-    /// <summary>
-    ///  Creates a User using the sql data reader and an option to include an owner.
-    /// </summary>
-    /// <param name="reader">A SqlDataReader that has not exhausted it's result set.</param>
-    /// 
-    /// 
-    ///
-    public User(SqlDataReader reader)
-    {
-        Id = DbUtils.GetGuid(reader, COLUMNS.Id);
-        Uid = DbUtils.GetString(reader, COLUMNS.Uid);
-        FirstName = DbUtils.GetString(reader, COLUMNS.FirstName);
-        LastName = DbUtils.GetString(reader, COLUMNS.LastName);
-        ImageUrl = DbUtils.GetNullableString(reader, COLUMNS.ImageUrl);
-        DateCreated = DbUtils.GetDateTime(reader, COLUMNS.DateCreated);
-        DateLastModified = DbUtils.GetDateTime (reader, COLUMNS.DateLastModified);
+    public User(SqlDataReader reader) : base(reader) { }
 
-    }
+    public User() : base() { }
 
-    public User() { }
+    [DbColumn("[Moxie].[dbo].[User].[Id]")]
+    public Guid? Id { get; set; }
 
-    [DbColumn("[Uid]")]
+    [DbColumn("[Moxie].[dbo].[User].[Uid]")]
     public string Uid { get; set; }
 
-    [DbColumn("[FirstName]")]
+    [DbColumn("[Moxie].[dbo].[User].[FirstName]")]
     public string FirstName { get; set; }
 
-    [DbColumn("[LastName]")]
+    [DbColumn("[Moxie].[dbo].[User].[LastName]")]
     public string LastName { get; set; }
 
-    [DbColumn("[ImageUrl]")]
+    [DbColumn("[Moxie].[dbo].[User].[ImageUrl]")]
     public string ImageUrl { get; set; }
 
-    [DbColumn("[DateCreated]")]
+    [DbColumn("[Moxie].[dbo].[User].[DateCreated]")]
     public DateTime DateCreated { get; set; }
 
-    [DbColumn("[DateLastModified]")]
+    [DbColumn("[Moxie].[dbo].[User].[DateLastModified]")]
     public DateTime DateLastModified { get; set; }
-
-    public static class TABLE
-    {
-        public static string Name = "[Moxie].[dbo].[User]";
-    }
-    public static class COLUMNS
-    {
-        public static readonly string Id = $"{TABLE.Name}.[Id]";
-        public static readonly string Uid = $"{TABLE.Name}.[Uid]";
-        public static readonly string FirstName = $"{TABLE.Name}.[FirstName]";
-        public static readonly string LastName = $"{TABLE.Name}.[LastName]";
-        public static readonly string ImageUrl = $"{TABLE.Name}.ImageUrl";
-        public static readonly string DateCreated = $"{TABLE.Name}.[DateCreated]";
-        public static readonly string DateLastModified = $"{TABLE.Name}.[DateLastModified]";
-
-        public static readonly string SelectAll = $@"  {Id} AS '{Id}',
-                                                       {FirstName} AS '{FirstName}',
-	                                                   {LastName} AS '{LastName}',
-	                                                   {ImageUrl} AS '{ImageUrl}',
-	                                                   {DateCreated} AS '{DateCreated}',
-	                                                   {DateLastModified} AS '{DateLastModified}'";
-    }
-
-    public string GetTableName()
-    {
-        return TABLE.Name;
-    }
-
-    public string GetSelectAllStatement()
-    {
-        return COLUMNS.SelectAll;
-    }
 }

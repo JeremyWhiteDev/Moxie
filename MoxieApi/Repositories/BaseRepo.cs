@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using MoxieApi.Attributes;
 using MoxieApi.Models;
+using MoxieApi.Utils;
 using System.Diagnostics.Metrics;
 using System.Reflection;
 using System.Text;
@@ -54,7 +55,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : IBaseEntity
     }
 
 
-    public T GetById(int id)
+    public T GetById(Guid id)
     {
         using (var conn = Connection)
         {
@@ -64,7 +65,8 @@ public class BaseRepository<T> : IBaseRepository<T> where T : IBaseEntity
                 cmd.CommandText = $@"
                                     SELECT {CreateSelectAllStatement()}
                                     FROM {_tableName}
-                                    WHERE {id} = @Id";
+                                    WHERE {GetIdColumnName()} = @Id";
+                DbUtils.AddParameter(cmd, "@Id", id);
                 var reader = cmd.ExecuteReader();
                 T item = default(T);
                 if (reader.Read())
@@ -116,6 +118,12 @@ public class BaseRepository<T> : IBaseRepository<T> where T : IBaseEntity
 
     }
 
+    private string GetIdColumnName()
+    {
+        var IdColumn = _tableColumns.FirstOrDefault(c => c.Contains("[Id]"));
+        return IdColumn.ToString();
+    }
+
     private string CreateSelectAllStatement()
     {
         StringBuilder sb = new StringBuilder();
@@ -124,7 +132,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : IBaseEntity
 
         foreach (string column in _tableColumns)
         {
-            sb.Append($"{_tableName + "." + column} as '{_tableName + "." + column}',");
+            sb.Append($"{column} as '{column}',");
         }
 
         return sb.ToString().Remove(sb.Length - 1, 1);

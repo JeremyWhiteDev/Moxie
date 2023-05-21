@@ -18,4 +18,9 @@ public class UserService : IUserService
     {
         return _repo.GetAll();
     }
+
+    public User GetById(Guid id)
+    {
+        return _repo.GetById(id);
+    }
 }

@@ -1,7 +1,6 @@
-﻿namespace MoxieApi.Models;
-
-public interface IBaseEntity
+﻿namespace MoxieApi.Models
 {
-    public string GetTableName();
-    public string GetSelectAllStatement();
+    public interface IBaseEntity
+    {
+    }
 }

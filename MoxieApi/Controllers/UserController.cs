@@ -20,4 +20,10 @@ public class UserController : ControllerBase
     {
         return Ok(_userService.GetAll());
     }
+
+    [HttpGet("{id}")]
+    public IActionResult GetById(Guid id)
+    {
+        return Ok(_userService.GetById(id));
+    }
 }
