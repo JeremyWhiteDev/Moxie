@@ -82,7 +82,7 @@ public class BaseRepository<T>
 
     public void Add(T type)
     {
-
+        
     }
 
     public void Update(T type)
