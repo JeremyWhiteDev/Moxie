@@ -172,6 +172,37 @@ public static class DbUtils
     }
 
     /// <summary>
+    ///  Add a parameter to the given SqlCommand object and gracefully handle null values.
+    /// </summary>
+    /// <param name="cmd">The command to which to add the parameter.</param>
+    /// <param name="name">The name of the parameter.</param>
+    /// <param name="value">The value of the parameter. May be null.</param>
+    //public static void AddParameterList(SqlCommand cmd, List<string> parameterNames, List<string> columnNames, IEnumerable<PropertyInfo> props, object obj)
+    //{
+    //    foreach(string cName in columnNames)
+    //    {
+    //        //parameter is "@thisColumn"
+    //        //column names is "thisColumn"
+    //        //pops is List<Prop Info> like  Guid string, datetime datecreated, etc.
+
+    //        var currentProp = props.FirstOrDefault(p => p.GetCustomAttribute<DbColumnAttribute>(true).Name == cName);
+
+    //        //need to pass in the current obj
+    //        cmd.Parameters.AddWithValue(parameterName, currentProp.GetValue(obj));
+
+    //    }
+    //    if (value == null)
+    //    {
+    //        cmd.Parameters.AddWithValue(name, DBNull.Value);
+    //    }
+    //    else
+    //    {
+    //        cmd.Parameters.AddWithValue(name, value);
+    //    }
+    //}
+
+
+    /// <summary>
     ///  Resolve the correct type of reader to implement based on the Property Type
     /// </summary>
     /// <param name="reader">A SqlDataReader that has not exhausted it's result set.</param>

@@ -12,14 +12,14 @@ public class BaseRepository<T>
 {
     private readonly string _connectionString;
 
-    private readonly List<string> _tableColumns;
+    private readonly Dictionary<PropertyInfo, string> _tableColumns;
 
     private string _tableName;
 
     public BaseRepository(IConfiguration configuration)
     {
         _connectionString = configuration.GetConnectionString("DefaultConnection");
-        _tableColumns = new List<string>();
+        _tableColumns = new Dictionary<PropertyInfo, string>();
         SetupTableData();
     }
 
@@ -80,9 +80,35 @@ public class BaseRepository<T>
         }
     }
 
-    public void Add(T type)
+    public void Add(T obj)
     {
-        
+        //I need the table name, DONE,
+        //all the column names in a csv format, DONE
+        //and attaching values from T type. dynamically, creating unique string values with @. Take the same list from above, at @ to each one.
+        //Dynamically loop over the column list.
+        //  for each one, I'm going to pass the
+        //      cmd,
+        //      the @string variable,
+        //      the property that we are assigning it from. HARDEST PART.
+        // loop over type properties, first or default for the current db attribute name.
+        // get the value of that property, send it to top level DbUtils.
+        var parameterNames = GetParameterNames();
+
+        var props = typeof(T).GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(DbColumnAttribute)));
+        using (var conn = Connection)
+        {
+            conn.Open();
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = $@"
+                                    INSERT INTO {_tableName}
+                                    ({String.Join(",", _tableColumns)})
+                                    OUTPUT INSERTED.Id
+                                    VALUES {String.Join(",", parameterNames)}";
+                //DbUtils.AddParameterList(cmd, parameterNames, _tableColumns, props, obj);
+                var id = cmd.ExecuteScalar();
+            }
+        }
     }
 
     public void Update(T type)
@@ -111,17 +137,28 @@ public class BaseRepository<T>
 
             if (attr != null)
             {
-                _tableColumns.Add(attr.Name);
+                _tableColumns.Add(prop, attr.Name);
             }
 
         }
 
     }
 
+    private List<string> GetParameterNames()
+    {
+        var parameterArr = new List<string>(); 
+        foreach (KeyValuePair<PropertyInfo, string> column in _tableColumns)
+        {
+            parameterArr.Add("@"+column.Value);
+        }
+        return parameterArr;
+       
+    }
+
     private string GetIdColumnName()
     {
-        var IdColumn = _tableColumns.FirstOrDefault(c => c.Contains("[Id]"));
-        return IdColumn.ToString();
+        var IdColumn = _tableColumns.FirstOrDefault(c => c.Value.Contains("[Id]"));
+        return IdColumn.Value.ToString();
     }
 
     private string CreateSelectAllStatement()
@@ -130,9 +167,9 @@ public class BaseRepository<T>
 
 
 
-        foreach (string column in _tableColumns)
+        foreach (KeyValuePair<PropertyInfo, string> column in _tableColumns)
         {
-            sb.Append($"{column} as '{column}',");
+            sb.Append($"{column.Value} as '{column.Value}',");
         }
 
         return sb.ToString().Remove(sb.Length - 1, 1);
