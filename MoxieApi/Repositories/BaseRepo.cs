@@ -8,7 +8,7 @@ using System.Text;
 
 namespace MoxieApi.Repositories;
 
-public class BaseRepository<T> : IBaseRepository<T> where T : IBaseEntity
+public class BaseRepository<T>
 {
     private readonly string _connectionString;
 

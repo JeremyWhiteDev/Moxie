@@ -2,7 +2,7 @@
 
 namespace MoxieApi.Repositories
 {
-    public interface IBaseRepository<T> where T : IBaseEntity
+    public interface IBaseRepository<T> 
     {
         void Add(T type);
         void Delete(int id);

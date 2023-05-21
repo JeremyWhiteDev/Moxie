@@ -7,7 +7,7 @@ using System.Xml.Linq;
 namespace MoxieApi.Models;
 
 [DbTable("[Moxie].[dbo].[User]")]
-public class User : BaseEntity<User>, IBaseEntity
+public class User : BaseEntity<User>
 {
     public User(SqlDataReader reader) : base(reader) { }
 
