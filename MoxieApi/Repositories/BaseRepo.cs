@@ -90,9 +90,9 @@ public class BaseRepository<T>
             {
                 cmd.CommandText = $@"
                                     INSERT INTO {_tableName}
-                                    ({String.Join(",", _tableColumns.Values.Select(x => x.columnName.ToString()).ToList())})
+                                    ({String.Join(",", _tableColumns.Values.Where(x => !x.columnName.Contains("[Id]")).Select(x =>  x.columnName.ToString()).ToList())})
                                     OUTPUT INSERTED.Id
-                                    VALUES ({String.Join(",", _tableColumns.Values.Select(x => x.parameterName.ToString()).ToList())})";
+                                    VALUES ({String.Join(",", _tableColumns.Values.Where(x => !x.parameterName.Contains("@Id")).Select(x => x.parameterName.ToString()).ToList())})";
                 DbUtils.AddParameterList(cmd, _tableColumns, obj);
                 return (Guid)cmd.ExecuteScalar();
                 
