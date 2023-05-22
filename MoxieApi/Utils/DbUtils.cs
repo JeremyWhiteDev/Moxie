@@ -217,7 +217,11 @@ public static class DbUtils
         {
             prop.SetValue(obj, GetGuid(reader, attr.Name));
         }
-     else if (prop.PropertyType == typeof(int?))
+        else if (prop.PropertyType == typeof(Guid))
+        {
+            prop.SetValue(obj, GetGuid(reader, attr.Name));
+        }
+        else if (prop.PropertyType == typeof(int?))
         {
             prop.SetValue(obj, GetNullableInt(reader, attr.Name));
         }
