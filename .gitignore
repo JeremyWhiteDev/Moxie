@@ -368,3 +368,8 @@ FodyWeavers.xsd
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+# next.js
+/Moxie-Client/.next/
+/Moxie-Client/out/
