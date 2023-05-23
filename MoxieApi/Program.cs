@@ -12,11 +12,16 @@ builder.Services.AddSwaggerGen();
 
 //User Transients
 builder.Services.AddTransient<IUserService, UserService>();
-builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IUserRepo, UserRepo>();
 
 //SkillTree Transients
 builder.Services.AddTransient<ISkillTreeService, SkillTreeService>();
 builder.Services.AddTransient<ISkillTreeRepo, SkillTreeRepo>();
+
+//SkillGoal Transients
+builder.Services.AddTransient<ISkillGoalService, SkillGoalService>();
+builder.Services.AddTransient<ISkillGoalRepo, SkillGoalRepo>();
+
 
 var app = builder.Build();
 

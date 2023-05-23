@@ -9,7 +9,7 @@ using System.Text;
 
 namespace MoxieApi.Repositories;
 
-public class BaseRepository<T>
+public class BaseRepo<T>
 {
     private readonly string _connectionString;
 
@@ -17,7 +17,7 @@ public class BaseRepository<T>
 
     private string _tableName;
 
-    public BaseRepository(IConfiguration configuration)
+    public BaseRepo(IConfiguration configuration)
     {
         _connectionString = configuration.GetConnectionString("DefaultConnection");
         _tableColumns = new Dictionary<PropertyInfo, (string, string)>();

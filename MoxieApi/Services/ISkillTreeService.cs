@@ -1,12 +1,11 @@
 ﻿using MoxieApi.Models;
 
-namespace MoxieApi.Services
+namespace MoxieApi.Services;
+
+public interface ISkillTreeService
 {
-    public interface ISkillTreeService
-    {
-        Guid Add(SkillTree skillTree);
-        List<SkillTree> GetAll();
-        SkillTree GetById(Guid id);
-        void Update(SkillTree skillTree, Guid id);
-    }
+    Guid Add(SkillTree skillTree);
+    List<SkillTree> GetAll();
+    SkillTree GetById(Guid id);
+    void Update(SkillTree skillTree, Guid id);
 }

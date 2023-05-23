@@ -6,9 +6,9 @@ namespace MoxieApi.Services;
 public class UserService : IUserService 
 {
 
-    private readonly IUserRepository _repo;
+    private readonly IUserRepo _repo;
 
-    public UserService(IUserRepository userRepository)
+    public UserService(IUserRepo userRepository)
     {
         _repo = userRepository;
     }

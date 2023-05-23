@@ -2,7 +2,7 @@
 
 namespace MoxieApi.Repositories;
 
-public interface ISkillTreeRepo : IBaseRepo<SkillTree>
+public interface IUserRepo : IBaseRepo<User>
 {
 
 }

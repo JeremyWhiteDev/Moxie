@@ -2,7 +2,7 @@
 
 namespace MoxieApi.Repositories;
 
-public class SkillTreeRepo : BaseRepository<SkillTree>, ISkillTreeRepo
+public class SkillTreeRepo : BaseRepo<SkillTree>, ISkillTreeRepo
 {
     public SkillTreeRepo(IConfiguration configuration) : base(configuration) { }
 
