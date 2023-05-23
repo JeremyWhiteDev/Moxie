@@ -33,4 +33,8 @@ public class UserService : IUserService
     {
         _repo.Update(user, id);
     }
+    public void Delete(Guid id)
+    {
+        _repo.Delete(id);
+    }
 }

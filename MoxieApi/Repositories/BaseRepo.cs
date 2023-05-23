@@ -121,7 +121,23 @@ public class BaseRepo<T>
         }
     }
 
-    public void Delete(int id) { }
+    public void Delete(Guid id) 
+    {
+        using (var conn = Connection)
+        {
+            conn.Open();
+            using (var cmd = conn.CreateCommand())
+            {
+
+
+                cmd.CommandText = $@"DELETE FROM {_tableName}
+                                    WHERE {GetIdColumnName()} = @EntityId";
+                DbUtils.AddParameter(cmd, "@EntityId", id);
+
+                cmd.ExecuteNonQuery();
+            }
+        }
+    }
 
 
     private void SetupTableData()

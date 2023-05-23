@@ -41,4 +41,11 @@ public class SkillTreeController : ControllerBase
         _skillTreeService.Update(skillTree, id);
         return NoContent();
     }
+
+    [HttpDelete("{id}")]
+    public IActionResult Delete(Guid id)
+    {
+        _skillTreeService.Delete(id);
+        return NoContent();
+    }
 }

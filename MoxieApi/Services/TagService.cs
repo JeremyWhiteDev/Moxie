@@ -33,4 +33,8 @@ public class TagService : ITagService
     {
         _repo.Update(tag, id);
     }
+    public void Delete(Guid id)
+    {
+        _repo.Delete(id);
+    }
 }

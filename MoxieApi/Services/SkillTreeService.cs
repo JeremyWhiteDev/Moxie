@@ -32,5 +32,9 @@ public class SkillTreeService : ISkillTreeService
     {
         _repo.Update(skillTree, id);
     }
+    public void Delete(Guid id)
+    {
+        _repo.Delete(id);
+    }
 
 }

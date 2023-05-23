@@ -33,4 +33,9 @@ public class SkillGoalService : ISkillGoalService
         _repo.Update(skillTree, id);
     }
 
+    public void Delete(Guid id)
+    {
+        _repo.Delete(id);
+    }
+
 }

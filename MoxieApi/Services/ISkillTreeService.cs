@@ -8,4 +8,5 @@ public interface ISkillTreeService
     List<SkillTree> GetAll();
     SkillTree GetById(Guid id);
     void Update(SkillTree skillTree, Guid id);
+    void Delete(Guid id);
 }

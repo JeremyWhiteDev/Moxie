@@ -40,4 +40,11 @@ public class TagController : ControllerBase
         _tagService.Update(tag, id);
         return NoContent();
     }
+
+    [HttpDelete("{id}")]
+    public IActionResult Delete(Guid id)
+    {
+        _tagService.Delete(id);
+        return NoContent();
+    }
 }

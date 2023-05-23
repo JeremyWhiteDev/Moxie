@@ -8,4 +8,5 @@ public interface IUserService
     User GetById(Guid id);
     Guid Add(User user);
     void Update(User user, Guid id);
+    void Delete(Guid id);
 }

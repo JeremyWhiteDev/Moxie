@@ -8,4 +8,5 @@ public interface ISkillGoalService
     List<SkillGoal> GetAll();
     SkillGoal GetById(Guid id);
     void Update(SkillGoal skillGoal, Guid id);
+    void Delete(Guid id);
 }

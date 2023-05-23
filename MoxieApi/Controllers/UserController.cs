@@ -40,4 +40,11 @@ public class UserController : ControllerBase
         _userService.Update(user, id);
         return NoContent();
     }
+
+    [HttpDelete("{id}")]
+    public IActionResult Delete(Guid id)
+    {
+        _userService.Delete(id);
+        return NoContent();
+    }
 }

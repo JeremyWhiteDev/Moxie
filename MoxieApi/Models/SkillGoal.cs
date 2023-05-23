@@ -26,9 +26,6 @@ public class SkillGoal : BaseEntity<SkillGoal>
     [DbColumn("[Moxie].[dbo].[SkillGoal].[ExperiencePointsRequired]")]
     public int ExperiencePointsRequired { get; set; }
 
-    [DbColumn("[Moxie].[dbo].[SkillGoal].[ChallengeId]")]
-    public Guid ChallengeId { get; set; }
-
     [DbColumn("[Moxie].[dbo].[SkillGoal].[IsComplete]")]
     public bool IsComplete { get; set; }
 

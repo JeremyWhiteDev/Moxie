@@ -40,4 +40,11 @@ public class SkillGoalController : ControllerBase
         _skillGoalService.Update(skillGoal, id);
         return NoContent();
     }
+
+    [HttpDelete("{id}")]
+    public IActionResult Delete(Guid id)
+    {
+        _skillGoalService.Delete(id);
+        return NoContent();
+    }
 }

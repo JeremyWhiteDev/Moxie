@@ -8,4 +8,5 @@ public interface ITagService
     Tag GetById(Guid id);
     Guid Add(Tag tag);
     void Update(Tag tag, Guid id);
+    void Delete(Guid id);
 }
