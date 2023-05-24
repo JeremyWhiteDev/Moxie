@@ -8,29 +8,44 @@ import {
     UserCredential,
     Auth,
 } from 'firebase/auth';
-import './Constants';
 import {
     EMAIL_REGISTER,
     EMAIL_SIGN_IN,
     GOOGLE_SIGN_IN,
     ROUTE_CONSTANTS,
-} from './Constants';
+} from './constants';
+import { NextRouter } from 'next/router';
+import { setCookie } from 'cookies-next';
+import firebase_app from './config';
 
-type userLogin = {
+
+export type UserLogin = {
     email: string,
-    password: string
+    password: string,
+    uid: string,
+    accessToken: string,
+    loginType: string
 }
 
+export type User = {
+    id: string,
+    uid: string,
+    firstName: string,
+    lastName: string,
+    imageUrl: string,
+    dateCreated: Date,
+    dateLastModified: Date,
+    loginType: string
+}
 
-// Register New User
-export const authenticate = (userObj: userLogin, navigate: CallableFunction, signInMethod: string) => {
-    const auth = getAuth();
-    const userAuthObj = {};
+// Either signin or register a user.
+export const authenticate = (userLogin: UserLogin, router: NextRouter, signInMethod: string) => {
+    const auth = getAuth(firebase_app);
     const provider = new GoogleAuthProvider();
-    registerOrSignIn(userObj, auth, provider, signInMethod)
-        .then((userCredResp) => handleFirebaseResponse(userCredResp, userAuthObj))
+    registerOrSignIn(userLogin, auth, provider, signInMethod)
+        .then((userCredResp) => handleFirebaseResponse(userCredResp, userLogin))
         .then((userExistsResp) =>
-            handleUserExists(userExistsResp, navigate, userAuthObj)
+            handleUserExists(userExistsResp, router)
         )
         .catch((error) => {
             console.log('Email Register Error');
@@ -40,14 +55,14 @@ export const authenticate = (userObj: userLogin, navigate: CallableFunction, sig
 };
 
 // Sign out
-export const authsignOut = (navigate) => {
+export const authsignOut = (router: NextRouter) => {
     const auth = getAuth();
     signOut(auth)
         .then(() => {
             // Remove the user from localstorage
             localStorage.removeItem('mooch_user');
-            // Navigate us back to home
-            navigate('/login');
+            // router us back to home
+            router.push('/login');
             console.log('Sign Out Success!');
         })
         .catch((error) => {
@@ -57,13 +72,13 @@ export const authsignOut = (navigate) => {
         });
 };
 
-const registerOrSignIn = async (userObj: userLogin, auth: Auth, provider: GoogleAuthProvider, signInMethod: string): Promise<UserCredential> => {
+const registerOrSignIn = async (userLogin: UserLogin, auth: Auth, provider: GoogleAuthProvider, signInMethod: string): Promise<UserCredential> => {
     switch (signInMethod) {
         case EMAIL_REGISTER:
             return createUserWithEmailAndPassword(
                 auth,
-                userObj.email,
-                userObj.password
+                userLogin.email,
+                userLogin.password
             );
         case GOOGLE_SIGN_IN:
             return signInWithPopup(auth, provider).then((resp) => {
@@ -74,29 +89,28 @@ const registerOrSignIn = async (userObj: userLogin, auth: Auth, provider: Google
                 }
             });
         case EMAIL_SIGN_IN:
-            return signInWithEmailAndPassword(auth, userObj.email, userObj.password).then((resp) => {
+            return signInWithEmailAndPassword(auth, userLogin.email, userLogin.password).then((resp) => {
                 if (resp.user.email) {
                     return resp
                 } else {
                     return Promise.reject(new Error(`No User found`))
                 }
-
             });
         default:
             return Promise.reject(new Error(`No User found`))
     }
 };
 
-const handleFirebaseResponse = (resp, userObj) => {
-    userObj.email = resp.user.email;
-    userObj.uid = resp.user.uid;
-    userObj.accessToken = resp.user.accessToken;
-    userObj.type = 'email';
+const handleFirebaseResponse = async (resp: UserCredential, userLogin: UserLogin): Promise<User> => {
+    userLogin.email = resp.user.email ? resp.user.email : ""
+    userLogin.uid = resp.user.uid;
+    userLogin.accessToken = await resp.user.getIdToken();
+    userLogin.loginType = 'email';
     return doesUserExistInDb(resp.user.uid);
 };
 
 //check our API to ensure that the firebase user that was just logged exists in our local SQL database
-const doesUserExistInDb = (firebaseUserId) => {
+const doesUserExistInDb = async (firebaseUserId: string): Promise<User> => {
     return getToken().then((token) =>
         fetch(`${ROUTE_CONSTANTS.API_URL}/UserExists/${firebaseUserId}`, {
             method: 'GET',
@@ -117,19 +131,15 @@ export const getToken = () => {
     return currentUser.getIdToken();
 };
 
-const handleUserExists = (resp, navigate, userAuth) => {
-    if (!resp.id) {
-        //navigate to new user page.
-        navigate('/createuser');
-        localStorage.setItem('mooch_user', JSON.stringify(userAuth));
+const handleUserExists = (userResp: User, router: NextRouter) => {
+    if (!userResp.id) {
+        //Route to new user page.
+        router.push('/createuser');
+        setCookie("moxieUser", JSON.stringify(userResp));
     } else {
-        userAuth.id = resp.id;
-        userAuth.username = resp.username;
-        userAuth.imageUrl = resp.imageUrl;
-        userAuth.subscriptionLevelId = resp.subscriptionLevelId;
         // Saves the user to localstorage
-        localStorage.setItem('mooch_user', JSON.stringify(userAuth));
-        // Navigate us back to home
-        navigate('/');
+        setCookie("moxieUser", JSON.stringify(userResp));
+        // Route us back to home
+        router.push('/');
     }
 };
