@@ -6,7 +6,6 @@ import React, {
     useState,
 } from 'react';
 
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { getCookie } from 'cookies-next';
 import { User } from './authUtils';
 
