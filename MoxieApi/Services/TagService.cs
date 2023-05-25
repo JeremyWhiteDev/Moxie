@@ -21,7 +21,7 @@ public class TagService : ITagService
 
     public Tag GetById(Guid id)
     {
-        return _repo.GetById(id);
+        return _repo.GetBy("Id", id).FirstOrDefault();
     }
 
     public Guid Add(Tag tag)

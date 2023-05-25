@@ -19,9 +19,14 @@ public class UserService : IUserService
         return _repo.GetAll();
     }
 
+    public User GetByFbUid(string? fbUid)
+    {
+        return _repo.GetBy("Uid", fbUid).FirstOrDefault();
+    }
+
     public User GetById(Guid id)
     {
-        return _repo.GetById(id);
+        return _repo.GetBy("Id", id).FirstOrDefault();
     }
 
     public Guid Add(User user)

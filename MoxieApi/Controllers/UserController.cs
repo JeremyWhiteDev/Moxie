@@ -17,8 +17,12 @@ public class UserController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult Get()
+    public IActionResult Get(string? uid = null)
     {
+        if (uid != null)
+        {
+            return Ok(_userService.GetByFbUid(uid));
+        }
         return Ok(_userService.GetAll());
     }
 

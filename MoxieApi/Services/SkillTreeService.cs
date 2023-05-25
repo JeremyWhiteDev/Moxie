@@ -20,7 +20,7 @@ public class SkillTreeService : ISkillTreeService
 
     public SkillTree GetById(Guid id)
     {
-        return _repo.GetById(id);
+        return _repo.GetBy("Id", id).FirstOrDefault();
     }
 
     public Guid Add(SkillTree skillTree)
