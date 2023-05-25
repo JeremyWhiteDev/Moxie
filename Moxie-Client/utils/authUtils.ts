@@ -121,6 +121,7 @@ const doesUserExistInDb = async (firebaseUserId: string): Promise<User> => {
 };
 
 //extract token from firebase response and return it here
+//TODO: use getToken to put the currect token in any of the api responses. Move all api responses to a data access layaer or make them accessible with custom functions.
 export const getToken = () => {
     const auth = getAuth();
     const currentUser = auth.currentUser;

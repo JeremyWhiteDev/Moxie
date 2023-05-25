@@ -23,6 +23,7 @@ const AuthContext = createContext<authProvider>({
     userLoading: true
 });
 
+//TODO: get the cookie to fetch server-side
 // export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 
 //     const user = JSON.parse(getCookie('moxieUser', { req, res }) as string) as User;
@@ -36,6 +37,7 @@ export const AuthProvider = ({ ...props }) => {
     const [userCookie, setUserCookie] = useState<User>()
 
     useEffect(() => {
+        console.log(value)
         const user = JSON.parse(getCookie('moxieUser') as string) as User;
         setUserCookie(user)
     }, [])
