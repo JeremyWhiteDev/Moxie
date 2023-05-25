@@ -8,6 +8,7 @@ import React, {
 
 import { getCookie } from 'cookies-next';
 import { User } from './authUtils';
+import { GetServerSideProps } from 'next';
 
 const AuthContext = createContext<authProvider>({
     user: {
@@ -23,21 +24,13 @@ const AuthContext = createContext<authProvider>({
     userLoading: true
 });
 
-//TODO: get the cookie to fetch server-side
-// export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-
-//     const user = JSON.parse(getCookie('moxieUser', { req, res }) as string) as User;
-
-
-//     return { notFound: true };
-// };
 
 
 export const AuthProvider = ({ ...props }) => {
     const [userCookie, setUserCookie] = useState<User>()
 
     useEffect(() => {
-        console.log(value)
+        //cookie is bridge to persisting data and for user to experience persistent sign on.
         const user = JSON.parse(getCookie('moxieUser') as string) as User;
         setUserCookie(user)
     }, [])

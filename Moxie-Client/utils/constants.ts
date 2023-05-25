@@ -1,12 +1,3 @@
-import { getCookie } from 'cookies-next';
-import { User } from "./authUtils"
-
-export const ROUTE_CONSTANTS = {
-    API_URL: "https://localhost:7082/api",
-}
-
-
-
 export const EMAIL_REGISTER = "emailRegister"
 
 export const GOOGLE_SIGN_IN = "googleSignIn"
