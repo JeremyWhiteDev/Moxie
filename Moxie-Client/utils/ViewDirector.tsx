@@ -12,7 +12,7 @@ export const ViewDirectorBasedOnAuth = ({ Component, pageProps }: Props) => {
     const auth = useAuth()
 
     if (auth.user?.id) {
-        <Component {...pageProps} />
+        return <Component {...pageProps} />
     }
     return <Signin />
 }

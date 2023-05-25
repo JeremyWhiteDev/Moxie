@@ -1,14 +1,16 @@
 import React, {
     createContext,
     useContext,
+    useEffect,
     useMemo,
+    useState,
 } from 'react';
 
-import { GetServerSideProps } from 'next';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { getCookie } from 'cookies-next';
 import { User } from './authUtils';
 
-const AuthContext = createContext({
+const AuthContext = createContext<authProvider>({
     user: {
         id: "",
         uid: "",
@@ -22,31 +24,38 @@ const AuthContext = createContext({
     userLoading: true
 });
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+// export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 
-    const user = JSON.parse(getCookie('moxieUser', context) as string) as User;
-
-
-    return { props: { user } };
-};
+//     const user = JSON.parse(getCookie('moxieUser', { req, res }) as string) as User;
 
 
-export const AuthProvider = (props: any, { user }: Props) => {
+//     return { notFound: true };
+// };
+
+
+export const AuthProvider = ({ ...props }) => {
+    const [userCookie, setUserCookie] = useState<User>()
+
+    useEffect(() => {
+        const user = JSON.parse(getCookie('moxieUser') as string) as User;
+        setUserCookie(user)
+    }, [])
 
 
     const value = useMemo(
         () => ({
-            user,
-            userLoading: user === null,
+            user: userCookie,
+            userLoading: userCookie === null,
         }),
-        [],
+        [userCookie],
     );
-
     return <AuthContext.Provider value={value} {...props} />;
 };
 
-type Props = {
-    user: User
+type authProvider = {
+    user: User | undefined,
+    userLoading: boolean
+
 }
 
 export const useAuth = () => {

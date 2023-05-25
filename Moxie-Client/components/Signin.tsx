@@ -1,8 +1,9 @@
-import { UserLogin, authenticate } from "@/utils/authUtils"
+import { User, UserLogin, authenticate } from "@/utils/authUtils"
 import { EMAIL_SIGN_IN, GOOGLE_SIGN_IN } from "@/utils/constants"
+import { getCookie } from "cookies-next"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { ChangeEvent, FormEvent, useState } from "react"
+import { ChangeEvent, FormEvent, useState, useEffect } from "react"
 
 export const Signin = () => {
     const [login, setLogin] = useState<UserLogin>({
@@ -14,11 +15,18 @@ export const Signin = () => {
     })
     const router = useRouter();
 
+    const [cookie, setCookie] = useState<User>()
     const updateLogin = (evt: ChangeEvent) => {
         const copy = { ...login };
         copy[evt.target.id as keyof UserLogin] = (evt.target as HTMLInputElement).value;
         setLogin(copy);
     };
+
+    useEffect(() => {
+        const user = JSON.parse(getCookie('moxieUser') as string) as User;
+        setCookie(user)
+    }, [])
+
 
     // Login With Email & Password
     const handleAuthenticate = async (e: FormEvent<HTMLButtonElement>, signInMethod: string) => {

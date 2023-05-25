@@ -12,11 +12,10 @@ import {
     EMAIL_REGISTER,
     EMAIL_SIGN_IN,
     GOOGLE_SIGN_IN,
-    ROUTE_CONSTANTS,
 } from './constants';
 import { NextRouter } from 'next/router';
 import { setCookie } from 'cookies-next';
-import firebase_app from './config';
+import firebase_app, { routeConstants } from './config';
 
 
 export type UserLogin = {
@@ -112,11 +111,11 @@ const handleFirebaseResponse = async (resp: UserCredential, userLogin: UserLogin
 //check our API to ensure that the firebase user that was just logged exists in our local SQL database
 const doesUserExistInDb = async (firebaseUserId: string): Promise<User> => {
     return getToken().then((token) =>
-        fetch(`${ROUTE_CONSTANTS.API_URL}/UserExists/${firebaseUserId}`, {
+        fetch(`${routeConstants.apiUrl}/User?uid=${firebaseUserId}`, {
             method: 'GET',
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
+            // headers: {
+            //     Authorization: `Bearer ${token}`,
+            // },
         }).then((resp) => resp.json())
     );
 };

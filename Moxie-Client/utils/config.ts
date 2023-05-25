@@ -12,5 +12,8 @@ const firebaseConfig = {
 
 let firebase_app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 
+export const routeConstants = {
+    apiUrl: process.env.NEXT_PUBLIC_API_URL,
+}
 
 export default firebase_app;
