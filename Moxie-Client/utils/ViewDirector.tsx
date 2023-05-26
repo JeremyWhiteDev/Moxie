@@ -1,10 +1,11 @@
 import Home from "@/pages"
-import { Signin } from "@/components/Signin"
+import Signin from "@/components/Signin"
 import { AppProps } from "next/app"
 import { GetServerSideProps, NextComponentType } from "next"
 import { getCookie } from "cookies-next"
 import { User } from "./authUtils"
 import { useAuth } from "./AuthProvider"
+import Loading from "@/components/Loading"
 
 
 
@@ -14,7 +15,10 @@ export const ViewDirectorBasedOnAuth = ({ Component, pageProps }: Props) => {
     if (auth.user?.id) {
         return <Component {...pageProps} />
     }
-    return <Signin />
+    if (auth.userLoading == null) {
+        return <Signin />
+    }
+    return <Loading />
 }
 
 type Props = {

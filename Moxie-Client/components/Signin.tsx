@@ -6,7 +6,7 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import { ChangeEvent, FormEvent, useState, useEffect } from "react"
 
-export const Signin = () => {
+const Signin = () => {
     const [login, setLogin] = useState<UserLogin>({
         email: "",
         password: "",
@@ -90,3 +90,5 @@ export const Signin = () => {
         </section>
     </main>
 }
+
+export default Signin

@@ -109,8 +109,8 @@ const handleFirebaseResponse = async (resp: UserCredential, userLogin: UserLogin
 };
 
 //check our API to ensure that the firebase user that was just logged exists in our local SQL database
-const doesUserExistInDb = async (firebaseUserId: string): Promise<User> => {
-    return getToken().then((token) =>
+export const doesUserExistInDb = async (firebaseUserId: string): Promise<User> => {
+    return getToken().then(() =>
         fetch(`${routeConstants.apiUrl}/User?uid=${firebaseUserId}`, {
             method: 'GET',
             // headers: {
@@ -131,7 +131,7 @@ export const getToken = () => {
     return currentUser.getIdToken();
 };
 
-const handleUserExists = (userResp: User, router: NextRouter) => {
+export const handleUserExists = (userResp: User, router: NextRouter) => {
     if (!userResp.id) {
         //Route to new user page.
         router.push('/createuser');
