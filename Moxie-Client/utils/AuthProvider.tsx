@@ -10,7 +10,7 @@ import {
     getAuth,
 } from 'firebase/auth';
 
-import { getCookie, setCookie } from 'cookies-next';
+import { getCookie, hasCookie, setCookie } from 'cookies-next';
 import { User, doesUserExistInDb } from './authUtils';
 import { GetServerSideProps } from 'next';
 import firebase_app from './config';
@@ -37,15 +37,23 @@ export const AuthProvider = ({ ...props }) => {
     const [isLoading, setIsLoading] = useState<boolean | null>(null)
 
     const router = useRouter()
-    //I need three states for userLoading. false, null,  true
-    //
 
     useEffect(() => {
         //cookie is bridge to persisting data and for user to experience persistent sign on.
-
+        //TODO, discover why this isn't working
+        if (hasCookie("moxieUser")) {
+            setUserCookie(JSON.parse(getCookie("moxieUser") as string) as User)
+            setIsLoading(null)
+        }
 
         getAuth(firebase_app).onAuthStateChanged(async (fbUser) => {
             if (fbUser) {
+                //right here, check if cookie exists for user. If they do, no redundant fetch to server needed, just get cookie
+                if (getCookie("moxieUser")) {
+                    setUserCookie(JSON.parse(getCookie("moxieUser") as string) as User)
+                    setIsLoading(false)
+                }
+
                 const resp = await doesUserExistInDb(fbUser.uid)
                 if (!resp.id) {
                     //Route to new user page.
