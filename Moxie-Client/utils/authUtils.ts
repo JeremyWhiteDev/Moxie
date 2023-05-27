@@ -16,6 +16,7 @@ import {
 import { NextRouter } from 'next/router';
 import { setCookie } from 'cookies-next';
 import firebase_app, { routeConstants } from './config';
+import { UserRegister } from '@/pages/Register';
 
 
 export type UserLogin = {
@@ -38,11 +39,11 @@ export type User = {
 }
 
 // Either signin or register a user.
-export const authenticate = (userLogin: UserLogin, router: NextRouter, signInMethod: string) => {
+export const authenticate = (userLogin: UserLogin | UserRegister, router: NextRouter, signInMethod: string) => {
     const auth = getAuth(firebase_app);
     const provider = new GoogleAuthProvider();
     registerOrSignIn(userLogin, auth, provider, signInMethod)
-        .then((userCredResp) => handleFirebaseResponse(userCredResp, userLogin))
+        .then((userCredResp) => handleFirebaseResponse(userCredResp, userLogin as UserLogin))
         .then((userExistsResp) =>
             handleUserExists(userExistsResp, router)
         )
@@ -61,7 +62,6 @@ export const authsignOut = () => {
             // Remove the user from localstorage
             localStorage.removeItem('mooch_user');
             // router us back to home
-
             console.log('Sign Out Success!');
         })
         .catch((error) => {
@@ -71,7 +71,7 @@ export const authsignOut = () => {
         });
 };
 
-const registerOrSignIn = async (userLogin: UserLogin, auth: Auth, provider: GoogleAuthProvider, signInMethod: string): Promise<UserCredential> => {
+const registerOrSignIn = async (userLogin: UserLogin | UserRegister, auth: Auth, provider: GoogleAuthProvider, signInMethod: string): Promise<UserCredential> => {
     switch (signInMethod) {
         case EMAIL_REGISTER:
             return createUserWithEmailAndPassword(
