@@ -6,6 +6,8 @@ import { getCookie } from "cookies-next"
 import { User } from "./authUtils"
 import { useAuth } from "./AuthProvider"
 import Loading from "@/components/Loading"
+import Main from "@/components/layout/Main"
+import Header from "@/components/layout/Header"
 
 
 
@@ -13,12 +15,26 @@ export const ViewDirectorBasedOnAuth = ({ Component, pageProps }: Props) => {
     const auth = useAuth()
 
     if (auth.user?.id) {
-        return <Component {...pageProps} />
+        return (<>
+            <Header />
+            <Main>
+                <Component {...pageProps} />
+            </Main>
+        </>
+        )
     }
     if (auth.userLoading == null) {
-        return <Signin />
+        return (
+            <Main>
+                <Signin />
+            </Main>
+        )
     }
-    return <Loading />
+    return (
+        <Main>
+            <Signin />
+        </Main>
+    )
 }
 
 type Props = {

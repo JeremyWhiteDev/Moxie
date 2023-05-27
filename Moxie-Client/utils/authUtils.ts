@@ -54,14 +54,14 @@ export const authenticate = (userLogin: UserLogin, router: NextRouter, signInMet
 };
 
 // Sign out
-export const authsignOut = (router: NextRouter) => {
+export const authsignOut = () => {
     const auth = getAuth();
     signOut(auth)
         .then(() => {
             // Remove the user from localstorage
             localStorage.removeItem('mooch_user');
             // router us back to home
-            router.push('/login');
+
             console.log('Sign Out Success!');
         })
         .catch((error) => {

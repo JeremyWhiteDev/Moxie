@@ -1,3 +1,4 @@
+import { authsignOut } from '@/utils/authUtils'
 import { Menu, Transition } from '@headlessui/react'
 import { Fragment, useEffect, useRef, useState } from 'react'
 
@@ -44,6 +45,28 @@ const UserHeaderMenu = () => {
                                 </button>
                             )}
                         </Menu.Item>
+                        <Menu.Item>
+                            {({ active }) => (
+                                <button
+                                    onClick={authsignOut}
+                                    className={`${active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                                >
+                                    {active ? (
+                                        <UserActiveIcon
+                                            className="mr-2 h-5 w-5"
+                                            aria-hidden="true"
+                                        />
+                                    ) : (
+                                        <UserInactiveIcon
+                                            className="mr-2 h-5 w-5"
+                                            aria-hidden="true"
+                                        />
+                                    )}
+                                    Sign Out
+                                </button>
+                            )}
+                        </Menu.Item>
 
                     </div>
                 </Menu.Items>
@@ -81,6 +104,39 @@ function EditActiveIcon(props: any) {
         >
             <path
                 d="M4 13V16H7L16 7L13 4L4 13Z"
+                fill="#8B5CF6"
+                stroke="#C4B5FD"
+                strokeWidth="2"
+            />
+        </svg>
+    )
+}
+
+function UserInactiveIcon(props: any) {
+    return (
+        <svg
+            {...props}
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 448 512">
+            <path
+                d="M304 128a80 80 0 1 0 -160 0 80 80 0 1 0 160 0zM96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM49.3 464H398.7c-8.9-63.3-63.3-112-129-112H178.3c-65.7 0-120.1 48.7-129 112zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3z"
+                fill="#EDE9FE"
+                stroke="#A78BFA"
+                strokeWidth="2"
+            />
+        </svg>
+    )
+}
+function UserActiveIcon(props: any) {
+    return (
+        <svg
+            {...props}
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 448 512">
+            <path
+                d="M304 128a80 80 0 1 0 -160 0 80 80 0 1 0 160 0zM96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM49.3 464H398.7c-8.9-63.3-63.3-112-129-112H178.3c-65.7 0-120.1 48.7-129 112zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3z"
                 fill="#8B5CF6"
                 stroke="#C4B5FD"
                 strokeWidth="2"
