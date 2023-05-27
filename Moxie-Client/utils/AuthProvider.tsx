@@ -55,7 +55,7 @@ export const AuthProvider = ({ ...props }) => {
                 }
 
                 const resp = await doesUserExistInDb(fbUser.uid)
-                if (!resp.id) {
+                if (!resp?.id) {
                     //Route to new user page.
                     router.push('/createuser');
                     setCookie("moxieUser", JSON.stringify(resp));
