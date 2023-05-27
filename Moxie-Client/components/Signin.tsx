@@ -1,10 +1,10 @@
 import { User, UserLogin, authenticate } from "@/utils/authUtils"
 import { EMAIL_SIGN_IN, GOOGLE_SIGN_IN } from "@/utils/constants"
-import { getCookie } from "cookies-next"
-import { GetServerSideProps } from "next"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { ChangeEvent, FormEvent, useState, useEffect } from "react"
+import Container from "./layout/Container"
+import Button from "./interaction/Button"
 
 const Signin = () => {
     const [login, setLogin] = useState<UserLogin>({
@@ -29,9 +29,8 @@ const Signin = () => {
     };
 
 
-    return <main className="">
-        <section className="md:max-w-3xl mx-auto">
-            <h1 className="dark:text-white mb-4">Login</h1>
+    return (
+        <Container header={"Login"}>
             <form>
                 <div className="mb-6">
                     <label
@@ -65,13 +64,9 @@ const Signin = () => {
                         required
                     />
                 </div>
-                <button
-                    type="submit"
-                    onClick={(evt) => handleAuthenticate(evt, EMAIL_SIGN_IN)}
-                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
+                <Button type="submit" onClick={handleAuthenticate} onClickArgs={[EMAIL_SIGN_IN]}>
                     Submit
-                </button>
+                </Button>
             </form>
             <section className=" mt-8 dark:text-white">
                 New User?{" "}
@@ -80,15 +75,12 @@ const Signin = () => {
                 </Link>
             </section>
             <h2 className="mt-4 dark:text-white">Or</h2>
-            <button
-                type="submit"
-                onClick={(evt) => handleAuthenticate(evt, GOOGLE_SIGN_IN)}
-                className="mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-                Login with Google
-            </button>
-        </section>
-    </main>
+            <Button type="submit" onClick={handleAuthenticate} onClickArgs={[GOOGLE_SIGN_IN]}>
+                Sign In with Google
+            </Button>
+        </Container>
+    )
+
 }
 
 export default Signin
