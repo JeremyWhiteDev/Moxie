@@ -116,7 +116,13 @@ export const doesUserExistInDb = async (firebaseUserId: string): Promise<User> =
             // headers: {
             //     Authorization: `Bearer ${token}`,
             // },
-        }).then((resp) => resp.json())
+        }).then((resp) => resp.json()).catch((error) => {
+            const auth = getAuth();
+            auth.signOut()
+            console.log('Sign In Error');
+            console.log('error code', error.code);
+            console.log('error message', error.message);
+        })
     );
 };
 
