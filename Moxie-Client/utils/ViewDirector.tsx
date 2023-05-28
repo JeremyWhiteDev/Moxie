@@ -19,51 +19,81 @@ export const ViewDirectorBasedOnAuth = ({ Component, pageProps }: Props) => {
     const router = useRouter()
     const [views, setViews] = useState<JSX.Element>()
 
+    if (auth.user?.id == null) {
+                return (
+                    <Main>
+                        <Signin />
+                    </Main>
+                )
+            } 
+            if (auth.user?.id) {
+                return (<>
+                    <Header />
+                    <Main>
+                        <Component {...pageProps} />
+                    </Main>
+                </>
+                )
+            }
 
-    //TODO: resolve router with protected routes. auth context causes all child components to rerender. but this ViewDirector only gets rendered and returns once. 
-    useEffect(() => {
-        setViews(resolveViews())
-    }, [router.asPath])
 
 
-    const resolveViews = () => {
 
-        if (router.pathname == "/signin" && auth.user?.id == null) {
-            return (
-                <Main>
-                    <Signin />
-                </Main>
-            )
-        } else if (router.pathname == "/register" && auth.user?.id == null) {
-            return (
-                <Main>
-                    <Register />
-                </Main>
-            )
-        }
-        if (auth.user?.id && router.pathname !== "signin") {
-            return (<>
-                <Header />
-                <Main>
-                    <Component {...pageProps} />
-                </Main>
-            </>
-            )
-        }
-        //TODO: userLoading isn't going to correct null state when logging out
-        if (auth.userLoading == null) {
 
-        }
-        return (
-            <Main>
-                <Signin />
-            </Main>
-        )
-    }
-    return views
 }
 
 type Props = {
     Component: NextComponentType,
     pageProps: any,
 }
+// /    //TODO: resolve router with protected routes. auth context causes all child components to rerender. but this ViewDirector only gets rendered and returns once. 
+// useEffect(() => {
+//     const handleRouteChange = () => {
+//         setViews(resolveViews)
+//     };
+
+//     router.events.on('routeChangeStart', handleRouteChange);
+
+//     // If the component is unmounted, unsubscribe
+//     // from the event with the `off` method:
+//     return () => {
+//         router.events.off('routeChangeStart', handleRouteChange);
+//     };
+// }, [router]);
+
+
+
+// const resolveViews = () => {
+
+//     if (router.pathname == "/signin" && auth.user?.id == null) {
+//         return (
+//             <Main>
+//                 <Signin />
+//             </Main>
+//         )
+//     } else if (router.pathname == "/register" && auth.user?.id == null) {
+//         return (
+//             <Main>
+//                 <Register />
+//             </Main>
+//         )
+//     }
+//     if (auth.user?.id && router.pathname !== "/signin") {
+//         return (<>
+//             <Header />
+//             <Main>
+//                 <Component {...pageProps} />
+//             </Main>
+//         </>
+//         )
+//     }
+//     //TODO: userLoading isn't going to correct null state when logging out
+//     if (auth.userLoading == null) {
+
+//     }
+//     return (
+//         <Main>
+//             <Signin />
+//         </Main>
+//     )
+// }
