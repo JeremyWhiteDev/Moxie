@@ -32,8 +32,8 @@ const Signin = () => {
 
 
     return (
-        <Container header={"Login"}>
-            <form>
+        <Container header={"Login"} size="md">
+            <form className="flex flex-col">
                 <FormField id="login--email" label="Your Email" stateValue={login.email} type="text" onChangeHandler={updateLogin} placeholder="name@email.com" />
                 <FormField id="login--password" label="Your Password" stateValue={login.password} type="password" onChangeHandler={updateLogin} />
 
