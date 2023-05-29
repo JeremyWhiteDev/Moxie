@@ -6,10 +6,6 @@ import { authsignOut } from '@/utils/authUtils'
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
-  const router = useRouter()
-  return (
-    <h1>
-      hello
-    </h1>
-  )
+  <h1>home</h1>
+
 }

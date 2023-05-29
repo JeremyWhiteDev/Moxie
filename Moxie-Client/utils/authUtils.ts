@@ -16,7 +16,8 @@ import {
 import { NextRouter } from 'next/router';
 import { setCookie } from 'cookies-next';
 import firebase_app, { routeConstants } from './config';
-import { UserRegister } from '@/pages/Register';
+import { UserRegister } from '@/pages/register';
+
 
 
 export type UserLogin = {
