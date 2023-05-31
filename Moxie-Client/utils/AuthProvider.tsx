@@ -40,11 +40,12 @@ export const AuthProvider = ({ ...props }) => {
 
     useEffect(() => {
         //cookie is bridge to persisting data and for user to experience persistent sign on.
-        //TODO, discover why this isn't working
-        if (hasCookie("moxieUser")) {
-            setUserCookie(JSON.parse(getCookie("moxieUser") as string) as User)
-            setIsLoading(null)
-        }
+        //TODO: M<uch of this probably needs to be reworked.
+
+        // if (hasCookie("moxieUser")) {
+        //     setUserCookie(JSON.parse(getCookie("moxieUser") as string) as User)
+        //     setIsLoading(null)
+        // }
 
         getAuth(firebase_app).onAuthStateChanged(async (fbUser) => {
             if (fbUser) {
@@ -63,7 +64,7 @@ export const AuthProvider = ({ ...props }) => {
                     // Saves the user to localstorage
                     setCookie("moxieUser", JSON.stringify(resp));
                     // Route us back to home
-                    router.push('/');
+                    //router.push('/');
                 }
 
                 setUserCookie(resp)

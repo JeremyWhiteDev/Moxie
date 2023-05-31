@@ -23,7 +23,7 @@ export const ViewDirectorBasedOnAuth = ({ Component, pageProps }: Props) => {
 
     useEffect(() => {
         if (auth.user?.id == undefined && (router.asPath !== "/signin" && router.asPath !== "/register")) {
-            router.push("/signin")
+            //router.push("/signin")
         }
         //conflict here? need to check userLoading.
         if (auth.user?.id && (router.asPath === "/signin" || router.asPath === "/register")) {
