@@ -11,8 +11,8 @@ const Container = ({ children, header, size }: Props) => {
         }
     }
     return (
-        <div className={`md:max-w-xl mx-auto backdrop-blur-xl bg-slate-950/20 p-8 rounded-lg flex-col flex`}>
-            <h1 className="dark:text-white text-center md:text-left text-4xl mt-5 md:max-w-5xl mx-auto mb-20">
+        <div className={`md:max-w-6xl -mt-4 mx-auto  bg-slate-900/60 p-8 rounded-lg flex-col shadow-inner shadow-slate-900 flex`}>
+            <h1 className="dark:text-white text-left md:text-left text-4xl mt-5 md:max-w-5xl  mb-20">
                 {header}
             </h1>
             {children}
@@ -29,5 +29,3 @@ type Props = {
 type Size = "sm" | "md" | "lg" | undefined
 
 export default Container
-
-// ${resolveSize(size)}
