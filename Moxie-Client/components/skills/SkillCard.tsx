@@ -12,7 +12,7 @@ const SkillCard = ({ skill }: Props) => {
     const [hover, setHover] = useHoverDelay()
 
 
-    return (<div className="flex flex-col  border border-gray-200 rounded-lg shadow-md md:flex-row md:w-full dark:border-gray-700 dark:bg-gray-800" onMouseEnter={() => setHover(true)}>
+    return (<div className="flex flex-col  border border-gray-200 rounded-lg shadow-md transistion duration-300 md:hover:scale-105 md:flex-row md:w-full dark:border-gray-700 dark:bg-gray-800" onMouseEnter={() => setHover(true)}>
         <div className="h-96 md:h-auto md:w-48 md:rounded-none md:rounded-l-lg text-8xl flex items-center justify-around" >
 
             <FontAwesomeIcon icon={faDumbbell} bounce={hover} style={{ color: "#ffffff", }} />
@@ -28,13 +28,13 @@ const SkillCard = ({ skill }: Props) => {
                 </p>
             </div>
             <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                Body
+                Tags:
             </p>
 
 
             <div className="flex gap-6 md:flex-row justify-end">
 
-                <Link href="/this">
+                <Link href={`/skills/${skill.id}`}>
                     <Button type="button">
                         View more Info
                     </Button>

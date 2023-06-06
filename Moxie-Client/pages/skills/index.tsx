@@ -1,37 +1,46 @@
-import SkillCard from "@/components/cards/SkillCard"
+import SkillCard from "@/components/skills/SkillCard"
+import Button from "@/components/interaction/Button";
 import Container from "@/components/layout/Container"
-import { getSkills } from "@/server/dataAccess";
-import { routeConstants, serverRoute } from "@/utils/config";
-import { InferGetServerSidePropsType, GetServerSideProps } from "next";
+import { routeConstants } from "@/utils/config";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Link from "next/link"
 import { useEffect, useState } from "react";
+import AddSkillModal from "@/components/skills/AddSkillModal";
 
 
+export const getServerSideProps: GetServerSideProps<{
+    initialSkills: Skill[];
+}> = async () => {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/skillTree`);
+    //TODO: Wrap in Try/Catch with toaster
+    const initialSkills = await res.json();
+    return { props: { initialSkills } };
+};
 
-const Skills = () => {
 
-    const [skills, setSkills] = useState<Skill[]>([])
-    useEffect(() => {
-        const fetchData = async () => {
-            const res = await fetch(`${routeConstants.apiUrl}/skilltree`);
-            const skills = await res.json();
-            setSkills(skills)
-        }
-        fetchData()
-    }, [])
+const Skills = ({ initialSkills }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+    const [skills, setSkills] = useState<Skill[]>(initialSkills)
+
+    const [addSkillOpen, setAddSkillOpen] = useState<boolean>(false)
+
+    const openModal = () => {
+        setAddSkillOpen(true)
+    }
+
+    const closeModal = () => {
+        setAddSkillOpen(false)
+    }
 
     return <>
-
-
-        <Link href="/">
-            <Container header="Skills">
-
-                {skills?.map(skill => <SkillCard skill={skill} key={skill.id} />)}
-            </Container>
-
-
-        </Link>
-
+        <Container header="Skills">
+            <div className="mb-12">
+                <Button type="button" onClick={openModal}>
+                    Add Skill
+                </Button>
+            </div>
+            {skills?.map(skill => <SkillCard skill={skill} key={skill.id} />)}
+        </Container>
+        <AddSkillModal isOpen={addSkillOpen} open={openModal} close={closeModal} />
     </>
 }
 
@@ -46,4 +55,3 @@ export type Skill = {
 }
 
 export default Skills
-
