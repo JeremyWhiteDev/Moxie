@@ -22,6 +22,9 @@ builder.Services.AddTransient<ISkillTreeRepo, SkillTreeRepo>();
 builder.Services.AddTransient<ISkillGoalService, SkillGoalService>();
 builder.Services.AddTransient<ISkillGoalRepo, SkillGoalRepo>();
 
+//Tag Transients
+builder.Services.AddTransient<ITagService, TagService>();
+builder.Services.AddTransient<ITagRepo, TagRepo>();
 
 var app = builder.Build();
 
