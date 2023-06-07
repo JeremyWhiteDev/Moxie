@@ -26,6 +26,8 @@ builder.Services.AddTransient<ISkillGoalRepo, SkillGoalRepo>();
 builder.Services.AddTransient<ITagService, TagService>();
 builder.Services.AddTransient<ITagRepo, TagRepo>();
 
+builder.Services.AddTransient<ISkillTreeTagRepo, SkillTreeTagRepo>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

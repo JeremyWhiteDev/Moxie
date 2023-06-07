@@ -4,6 +4,7 @@ import FormField from "../interaction/FormField"
 import Modal from "../layout/Modal"
 import { useAuth } from "@/utils/AuthProvider"
 import { Skill } from "@/pages/skills"
+import MultiSelect from "../interaction/MultiSelect"
 
 
 
@@ -11,6 +12,7 @@ const AddSkillModal = ({ isOpen, open, close }: Props) => {
     const [formFields, setFormFields] = useState<SkillForm>({
         name: "",
         icon: "",
+        proficiencyLevel: ""
     })
 
     const [tags, setTags] = useState<Tag[]>([])
@@ -20,9 +22,11 @@ const AddSkillModal = ({ isOpen, open, close }: Props) => {
     useEffect(() => {
         const fetchData = async () => {
             const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tag`);
-            const tags = await data.json();
-            const tagsWithState = tags.map((tag: Tag) => {
-                tag.isChecked = false
+            const tagsData = await data.json();
+            const tagsWithState = tagsData.map((tag: Tag) => {
+                const newTag = { ...tag }
+                newTag.isChecked = false
+                return newTag
             });
             setTags(tagsWithState)
         }
@@ -39,9 +43,9 @@ const AddSkillModal = ({ isOpen, open, close }: Props) => {
     const handleSubmit = async (evt: FormEvent<HTMLButtonElement>) => {
         evt.preventDefault();
         const sendToApi = { ...formFields } as AddSkillRequest;
-        sendToApi.dateCreated = new Date();
-        sendToApi.dateLastModified = new Date();
         sendToApi.userId = auth.user?.id as string;
+        sendToApi.tagIds = tags.filter((tag: Tag) => tag.isChecked).map((tag: Tag) => tag.id)
+        sendToApi.proficiencyLevel = "beginner"
 
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/Skill`, {
             method: "POST",
@@ -49,19 +53,7 @@ const AddSkillModal = ({ isOpen, open, close }: Props) => {
             body: JSON.stringify(sendToApi)
         })
 
-        if (response.ok) {
-            const addedSkill = await response.json() as Skill
-            const postSkillTags = {
-                skillId: addedSkill.id,
-                tagIds: tags.filter((tag: Tag) => tag.isChecked).map((tag: Tag) => tag.isChecked)
-            }
 
-            const tagResp = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/Skill/addTags`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(postSkillTags)
-            })
-        }
     }
 
 
@@ -70,6 +62,7 @@ const AddSkillModal = ({ isOpen, open, close }: Props) => {
             <form>
                 <FormField id="addSkill--name" label="Skill Name" stateValue={formFields.name} type="text" onChangeHandler={updateState} />
                 <FormField id="addSkill--icon" label="Your Last Name" stateValue={formFields.icon} type="text" onChangeHandler={updateState} />
+                <MultiSelect items={tags} setItems={setTags} />
 
                 <div className="mt-4 space-x-4">
                     <Button type="submit" onClick={handleSubmit}>
@@ -88,14 +81,15 @@ const AddSkillModal = ({ isOpen, open, close }: Props) => {
 type SkillForm = {
     name: string,
     icon: string,
+    proficiencyLevel: string
 }
 
 type AddSkillRequest = {
     name: string,
     icon: string,
     userId: string,
-    dateCreated: Date,
-    dateLastModified: Date
+    proficiencyLevel: string,
+    tagIds: string[]
 }
 
 type Tag = {

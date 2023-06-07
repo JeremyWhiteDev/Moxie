@@ -30,10 +30,11 @@ public class SkillTreeController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Add(SkillTree skillTree)
+    public IActionResult Add(SkillTreeService.AddSkill skillTree)
     {
         return Ok(_skillTreeService.Add(skillTree));
     }
+
 
     [HttpPut("{id}")]
     public IActionResult Update(SkillTree skillTree, Guid id)

@@ -38,7 +38,9 @@ const Skills = ({ initialSkills }: InferGetServerSidePropsType<typeof getServerS
                     Add Skill
                 </Button>
             </div>
-            {skills?.map(skill => <SkillCard skill={skill} key={skill.id} />)}
+            <section className="space-y-4">
+                {skills?.map(skill => <SkillCard skill={skill} key={skill.id} />)}
+            </section>
         </Container>
         <AddSkillModal isOpen={addSkillOpen} open={openModal} close={closeModal} />
     </>
