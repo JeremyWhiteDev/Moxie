@@ -62,7 +62,7 @@ const AddSkillModal = ({ isOpen, open, close }: Props) => {
             <form>
                 <FormField id="addSkill--name" label="Skill Name" stateValue={formFields.name} type="text" onChangeHandler={updateState} />
                 <FormField id="addSkill--icon" label="Your Last Name" stateValue={formFields.icon} type="text" onChangeHandler={updateState} />
-                <MultiSelect items={tags} setItems={setTags} />
+                <MultiSelect items={tags} label="Tags" />
 
                 <div className="mt-4 space-x-4">
                     <Button type="submit" onClick={handleSubmit}>
