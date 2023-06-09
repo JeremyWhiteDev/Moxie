@@ -1,10 +1,11 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import Button from "../interaction/Button"
 import FormField from "../interaction/FormField"
-import Modal from "../layout/Modal"
 import { useAuth } from "@/utils/AuthProvider"
 import { Skill } from "@/pages/skills"
 import MultiSelect from "../interaction/MultiSelect"
+import Modal from "../interaction/Modal"
+import PopoverMenu from "../interaction/Popover"
 
 
 
@@ -61,8 +62,9 @@ const AddSkillModal = ({ isOpen, open, close }: Props) => {
         <div className="mt-2">
             <form>
                 <FormField id="addSkill--name" label="Skill Name" stateValue={formFields.name} type="text" onChangeHandler={updateState} />
-                <FormField id="addSkill--icon" label="Your Last Name" stateValue={formFields.icon} type="text" onChangeHandler={updateState} />
+                <FormField id="addSkill--icon" label="Icon" stateValue={formFields.icon} type="text" onChangeHandler={updateState} />
                 <MultiSelect items={tags} label="Tags" />
+                <PopoverMenu />
 
                 <div className="mt-4 space-x-4">
                     <Button type="submit" onClick={handleSubmit}>
