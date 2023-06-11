@@ -6,4 +6,5 @@ public class SkillTreeRepo : BaseRepo<SkillTree>, ISkillTreeRepo
 {
     public SkillTreeRepo(IConfiguration configuration) : base(configuration) { }
 
+
 }

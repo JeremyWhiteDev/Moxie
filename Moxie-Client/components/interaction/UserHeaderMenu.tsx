@@ -1,8 +1,14 @@
+import { useAuth } from '@/utils/AuthProvider'
 import { authsignOut } from '@/utils/authUtils'
 import { Menu, Transition } from '@headlessui/react'
+import { useRouter } from 'next/router'
 import { Fragment, useEffect, useRef, useState } from 'react'
 
 const UserHeaderMenu = () => {
+    const router = useRouter()
+    const auth = useAuth()
+
+
     return (
 
         <Menu as="div" className="relative inline-block text-left">
@@ -29,6 +35,7 @@ const UserHeaderMenu = () => {
                                 <button
                                     className={`${active ? 'bg-violet-500 text-white' : 'text-gray-900'
                                         } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                                    onClick={() => router.push(`/user-settings/${auth?.user?.id}`)}
                                 >
                                     {active ? (
                                         <EditActiveIcon
@@ -48,7 +55,7 @@ const UserHeaderMenu = () => {
                         <Menu.Item>
                             {({ active }) => (
                                 <button
-                                    onClick={authsignOut}
+                                    onClick={() => authsignOut(router)}
                                     className={`${active ? 'bg-violet-500 text-white' : 'text-gray-900'
                                         } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                 >

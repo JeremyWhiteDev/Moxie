@@ -9,4 +9,6 @@ public interface ITagService
     Guid Add(Tag tag);
     void Update(Tag tag, Guid id);
     void Delete(Guid id);
+
+    public List<Tag> GetByUser(Guid id);
 }

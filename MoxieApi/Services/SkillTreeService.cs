@@ -19,7 +19,7 @@ public class SkillTreeService : ISkillTreeService
 
     public List<SkillTree> GetAll()
     {
-        return _skillTreeRepo.GetAll();
+        return _skillTreeRepo.GetAll().OrderByDescending(s => s.DateCreated).ToList();
     }
 
     public SkillTree GetById(Guid id)

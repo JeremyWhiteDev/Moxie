@@ -24,6 +24,11 @@ public class TagService : ITagService
         return _repo.GetBy("Id", id).FirstOrDefault();
     }
 
+    public List<Tag> GetByUser(Guid id)
+    {
+        return _repo.GetBy("UserId", id).OrderBy(t => t.Name).ToList();
+    }
+
     public Guid Add(Tag tag)
     {
         return _repo.Add(tag);

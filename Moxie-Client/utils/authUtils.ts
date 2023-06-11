@@ -14,7 +14,7 @@ import {
     GOOGLE_SIGN_IN,
 } from './constants';
 import { NextRouter } from 'next/router';
-import { setCookie } from 'cookies-next';
+import { deleteCookie, setCookie } from 'cookies-next';
 import firebase_app, { routeConstants } from './config';
 import { UserRegister } from '@/pages/register';
 
@@ -56,12 +56,14 @@ export const authenticate = (userLogin: UserLogin | UserRegister, router: NextRo
 };
 
 // Sign out
-export const authsignOut = () => {
+export const authsignOut = (router: NextRouter) => {
     const auth = getAuth();
     signOut(auth)
         .then(() => {
             // Remove the user from localstorage
             localStorage.removeItem('mooch_user');
+            deleteCookie("moxieUser")
+            router.push("/signin")
             // router us back to home
             console.log('Sign Out Success!');
         })
@@ -147,6 +149,6 @@ export const handleUserExists = (userResp: User, router: NextRouter) => {
         // Saves the user to localstorage
         setCookie("moxieUser", JSON.stringify(userResp));
         // Route us back to home
-        router.push('/');
+        router.push('/skills');
     }
 };

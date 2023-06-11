@@ -19,8 +19,6 @@ export const getServerSideProps: GetServerSideProps<{
 
 
 const Skills = ({ initialSkills }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-    const [skills, setSkills] = useState<Skill[]>(initialSkills)
-
     const [addSkillOpen, setAddSkillOpen] = useState<boolean>(false)
 
     const openModal = () => {
@@ -39,7 +37,7 @@ const Skills = ({ initialSkills }: InferGetServerSidePropsType<typeof getServerS
                 </Button>
             </div>
             <section className="space-y-4">
-                {skills?.map(skill => <SkillCard skill={skill} key={skill.id} />)}
+                {initialSkills?.map(skill => <SkillCard skill={skill} key={skill.id} />)}
             </section>
         </Container>
         <AddSkillModal isOpen={addSkillOpen} open={openModal} close={closeModal} />
@@ -48,6 +46,8 @@ const Skills = ({ initialSkills }: InferGetServerSidePropsType<typeof getServerS
 
 export type Skill = {
     id: string,
+    name: string,
+    icon: string,
     userId: string,
     proficiencyLevel: string,
     experiencePoints: number,

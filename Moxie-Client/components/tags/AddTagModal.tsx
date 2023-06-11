@@ -13,74 +13,50 @@ import { useRouter } from "next/router"
 
 
 
-const AddSkillModal = ({ isOpen, open, close }: Props) => {
-    const [formFields, setFormFields] = useState<SkillForm>({
+const AddTagModal = ({ isOpen, open, close }: Props) => {
+    const [formFields, setFormFields] = useState<Tag>({
         name: "",
-        icon: "faRocket",
-        proficiencyLevel: ""
+        userId: "",
+        id: null
     })
 
-    const [tags, setTags] = useState<Tag[]>([])
-    const [selectedItems, setSelectedItems] = useState<any[]>([])
     const router = useRouter()
 
 
     const auth = useAuth();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tag/user/${auth?.user?.id}`);
-            const tagsData = await data.json();
-            setTags(tagsData)
-        }
-        fetchData()
-    }, [])
-
     const updateState = (evt: ChangeEvent) => {
         const domId = evt.target.id.split("--")[1];
         const copy = { ...formFields };
-        copy[domId as keyof SkillForm] = (evt.target as HTMLInputElement).value;
+        copy[domId as keyof Tag] = (evt.target as HTMLInputElement).value;
         setFormFields(copy);
     };
 
     const handleSubmit = async (evt: FormEvent<HTMLButtonElement>) => {
         evt.preventDefault();
-        const sendToApi = { ...formFields } as AddSkillRequest;
+        const sendToApi = { ...formFields };
         sendToApi.userId = auth.user?.id as string;
-        sendToApi.tagIds = selectedItems.map(item => item.id)
-        sendToApi.proficiencyLevel = "beginner"
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/SkillTree`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tag`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(sendToApi)
         })
         if (response.ok) {
             close();
-            router.push("/skills")
+            router.push(`/user-settings/${auth?.user?.id}`)
         }
 
 
-    }
-
-    const updateIcon = (icon: string): void => {
-        const copy = { ...formFields }
-        copy.icon = icon
-        setFormFields(copy)
     }
 
 
     return <Modal title="Add Skill" isOpen={isOpen} open={open} close={close}>
 
         <div className="mt-2 flex flex-col items-center justify-center">
-            <div className="dark:border-violet-800 border-4 relative flex justify-center items-center text-8xl text-center p-4 rounded-full w-44 h-44 align-middle">
-                <FontAwesomeIcon icon={resolveIcon(formFields.icon)} style={{ color: "#ffffff", }} />
-                <PopoverMenu updateIcon={updateIcon} position="absolute -bottom-2 -right-12" />
-            </div>
+
             <form className="w-full">
                 <FormField id="addSkill--name" label="Skill Name" stateValue={formFields.name} type="text" onChangeHandler={updateState} />
-                <MultiSelect items={tags} label="Tags" selectedItems={selectedItems} setSelectedItems={setSelectedItems} />
-
                 <div className="mt-4 md:space-x-4">
                     <Button type="submit" onClick={handleSubmit}>
                         Submit
@@ -95,22 +71,9 @@ const AddSkillModal = ({ isOpen, open, close }: Props) => {
     </Modal>
 }
 
-type SkillForm = {
-    name: string,
-    icon: string,
-    proficiencyLevel: string
-}
-
-type AddSkillRequest = {
-    name: string,
-    icon: string,
-    userId: string,
-    proficiencyLevel: string,
-    tagIds: string[]
-}
 
 export type Tag = {
-    id: string,
+    id: string | null,
     name: string,
     userId: string
 }
@@ -121,4 +84,4 @@ type Props = {
     close: () => void
 }
 
-export default AddSkillModal
+export default AddTagModal
