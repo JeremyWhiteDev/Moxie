@@ -13,14 +13,16 @@ import { useRouter } from "next/router"
 
 
 
-const AddTagModal = ({ isOpen, close }: Props) => {
+const EditTagModal = ({ isOpen, close, tag }: Props) => {
     const [formFields, setFormFields] = useState<Tag>({
-        name: "",
-        userId: "",
-        id: null
+        name: tag?.name,
+        userId: tag?.userId,
+        id: tag?.id
     })
 
     const router = useRouter()
+
+    useEffect(() => setFormFields(tag), [tag])
 
 
     const auth = useAuth();
@@ -35,10 +37,9 @@ const AddTagModal = ({ isOpen, close }: Props) => {
     const handleSubmit = async (evt: FormEvent<HTMLButtonElement>) => {
         evt.preventDefault();
         const sendToApi = { ...formFields };
-        sendToApi.userId = auth.user?.id as string;
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tag`, {
-            method: "POST",
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tag/${tag.id}`, {
+            method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(sendToApi)
         })
@@ -51,7 +52,7 @@ const AddTagModal = ({ isOpen, close }: Props) => {
     }
 
 
-    return <Modal title="Add Tag" isOpen={isOpen} close={close}>
+    return <Modal title="Edit Tag" isOpen={isOpen} close={close}>
 
         <div className="mt-2 flex flex-col items-center justify-center">
 
@@ -80,7 +81,8 @@ export type Tag = {
 
 type Props = {
     isOpen: boolean,
-    close: () => void
+    close: () => void,
+    tag: Tag
 }
 
-export default AddTagModal
+export default EditTagModal

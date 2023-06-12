@@ -1,4 +1,5 @@
-﻿using MoxieApi.Models;
+﻿using MoxieApi.Attributes;
+using MoxieApi.Models;
 using MoxieApi.Repositories;
 
 namespace MoxieApi.Services;
@@ -16,6 +17,10 @@ public class SkillTreeService : ISkillTreeService
 
     }
 
+    public List<SkillTreeWithTags> GetAllByUserIdWithTags(Guid userId)
+    {
+        return _skillTreeRepo.GetAllByUserIdWithTags(userId);
+    }
 
     public List<SkillTree> GetAll()
     {
@@ -69,7 +74,12 @@ public class SkillTreeService : ISkillTreeService
         public Guid UserId { get; set; }
         public string ProficiencyLevel { get; set; }
         public List<Guid> TagIds { get; set; } = new List<Guid>();
+    }
 
+    public class SkillTreeWithTags : SkillTree
+    {
+        [DbColumn("TagAgg")]
+        public List<Tag>? Tags { get; set; }
     }
 
 }

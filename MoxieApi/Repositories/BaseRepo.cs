@@ -15,12 +15,6 @@ public class BaseRepo<T> : IBaseRepo<T>
 
     private readonly Dictionary<PropertyInfo, (string columnName, string parameterName)> _tableColumns;
 
-    //get the foreign keys matched with the table names/objects.
-    //loop over the foreign keys. get each one with the instance of the tableName/property.
-    //this is a problem I can chew on a little bit.
-    //Would rather get CRUD working first.
-
-
     private string _tableName;
 
     public BaseRepo(IConfiguration configuration)
@@ -60,32 +54,6 @@ public class BaseRepo<T> : IBaseRepo<T>
             }
         }
     }
-
-    public List<T> GetByFieldWithManyExpanded<U,V>(string columnName, object value)
-    {
-        using (var conn = Connection)
-        {
-            conn.Open();
-            using (var cmd = conn.CreateCommand())
-            {
-                cmd.CommandText = $@"
-                                    SELECT {CreateSelectAllString()}
-                                    FROM {_tableName}
-                                    WHERE {ResolveColumnName(columnName)} = @Entity";
-                DbUtils.AddParameter(cmd, "@Entity", value);
-                var reader = cmd.ExecuteReader();
-                List<T> list = new List<T>();
-                while (reader.Read())
-                {
-                    list.Add((T)Activator.CreateInstance(typeof(T), reader));
-                };
-
-                reader.Close();
-                return list;
-            }
-        }
-    }
-
 
     public List<T> GetBy(string columnName, object value)
     {
@@ -151,6 +119,25 @@ public class BaseRepo<T> : IBaseRepo<T>
             }
         }
     }
+
+    public void DeleteBy(string columnName, object value)
+    {
+        using (var conn = Connection)
+        {
+            conn.Open();
+            using (var cmd = conn.CreateCommand())
+            {
+
+
+                cmd.CommandText = $@"DELETE FROM {_tableName}
+                                    WHERE {ResolveColumnName(columnName)} = @EntityId";
+                DbUtils.AddParameter(cmd, "@EntityId", value);
+
+                cmd.ExecuteNonQuery();
+            }
+        }
+    }
+
 
     public void Delete(Guid id) 
     {

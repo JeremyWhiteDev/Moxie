@@ -29,6 +29,12 @@ public class SkillTreeController : ControllerBase
         return Ok(_skillTreeService.GetById(id));
     }
 
+    [HttpGet("withTags/{userId}")]
+    public IActionResult GetByUserWithTags(Guid userId)
+    {
+        return Ok(_skillTreeService.GetAllByUserIdWithTags(userId));
+    }
+
     [HttpPost]
     public IActionResult Add(SkillTreeService.AddSkill skillTree)
     {

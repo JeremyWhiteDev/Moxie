@@ -8,9 +8,12 @@ public class TagService : ITagService
 
     private readonly ITagRepo _repo;
 
-    public TagService(ITagRepo userRepository)
+    private readonly ISkillTreeTagRepo _skillTreeTagRepo;
+
+    public TagService(ITagRepo userRepository, ISkillTreeTagRepo skillTreeTagRepo)
     {
         _repo = userRepository;
+        _skillTreeTagRepo = skillTreeTagRepo;
     }
 
 
@@ -40,6 +43,10 @@ public class TagService : ITagService
     }
     public void Delete(Guid id)
     {
+        //first, I need to delete any references to this tag in the SkillTreeTag repo
+
+        _skillTreeTagRepo.DeleteBy("TagId", id);
         _repo.Delete(id);
+
     }
 }

@@ -1,12 +1,13 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useState } from "react";
-import Link from "next/link";
 import Container from "@/components/layout/Container";
 import { Tag } from "@/components/skills/AddSkillModal";
 import { getCookie } from "cookies-next";
 import { User } from "@/utils/authUtils";
 import Button from "@/components/interaction/Button";
 import AddTagModal from "@/components/tags/AddTagModal";
+import TagButton from "@/components/tags/TagButton";
+import EditTagModal from "@/components/tags/EditTagModal";
 
 export const getServerSideProps: GetServerSideProps<{
     initialTags: Tag[];
@@ -27,31 +28,48 @@ const UserSettings = ({ initialTags }: InferGetServerSidePropsType<typeof getSer
 
     //add button
     const [addTagOpen, setAddTagOpen] = useState<boolean>(false)
+    const [editTagOpen, setEditTagOpen] = useState<boolean>(false)
+    const [editTag, setEditTag] = useState<Tag>()
 
-    const openModal = () => {
+    const openAddTagModal = () => {
         setAddTagOpen(true)
     }
 
-    const closeModal = () => {
+    const closeAddTagModal = () => {
         setAddTagOpen(false)
+    }
+    const openEditTagModal = (tag: Tag) => {
+        setEditTag(tag)
+        setEditTagOpen(true)
+    }
+
+    const closeEditTagModal = () => {
+        setEditTagOpen(false)
     }
 
     return <>
-        <Container header="User Settings">
-            <div className="mb-12">
-                <div className="border-b border-gray-500 flex justify-between">
+        <Container header="Settings">
+            <div className="border-b border-gray-500 flex justify-between mb-12">
 
-                    <h1 className="dark:text-white text-left  md:text-left w-16 text-2xl pb-4 mt-5 ">
-                        Tags
-                    </h1>
-                    <Button type="button" onClick={openModal}>
-                        +
-                    </Button>
-                </div>
+                <h1 className="dark:text-white text-left  md:text-left max-w-32 text-2xl pb-4 mt-5 ">
+                    User Profile
+                </h1>
             </div>
-            {initialTags?.map((t: Tag) => <h1 key={t.id}>{t.name}</h1>)}
+            <div className="border-b border-gray-500 flex justify-between mb-12">
+                <h1 className="dark:text-white text-left  md:text-left max-w-32 text-2xl pb-4 mt-5 ">
+                    Tags
+                </h1>
+                <Button type="button" onClick={openAddTagModal}>
+                    +
+                </Button>
+            </div>
+            <div className="space-y-2">
+                {initialTags?.map((tag: Tag) => <TagButton tag={tag} openModal={() => openEditTagModal(tag)} />)}
+            </div>
+
         </Container>
-        <AddTagModal isOpen={addTagOpen} open={openModal} close={closeModal} />
+        <AddTagModal isOpen={addTagOpen} close={closeAddTagModal} />
+        {editTag && <EditTagModal isOpen={editTagOpen} close={closeEditTagModal} tag={editTag} />}
     </>
 }
 

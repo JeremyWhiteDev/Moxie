@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Data.Common;
 using System.Reflection;
+using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Data.SqlClient;
 using MoxieApi.Attributes;
 
@@ -132,6 +135,26 @@ public static class DbUtils
     }
 
     /// <summary>
+    ///  Get a IEnumerable? (nullable Enumerable) from a data reader object given a json value and gracefully handle NULL values
+    /// </summary>
+    /// <param name="reader">A SqlDataReader that has not exhausted it's result set.</param>
+    /// <param name="column">The name of the column from the result set refereed to by the reader.</param>
+    /// <returns>The value of the given column or null.</returns>
+    //public static IEnumerable? GetEnumerable(SqlDataReader reader, string column, PropertyInfo prop)
+    //{
+    //    var ordinal = reader.GetOrdinal(column);
+    //    if (reader.IsDBNull(ordinal))
+    //    {
+    //        return null;
+    //    }
+
+
+    //    //TODO: Make this generic Do something like this:         prop.GetType()
+    //    Type type = prop.GetType().MakeGenericType(prop.GetType());
+    //    return JsonSerializer.Deserialize<type>(DbUtils.GetString(reader, "UserSuggestions"))
+    //}
+
+    /// <summary>
     ///  Determine if the value a given column is NULL
     /// </summary>
     /// <param name="reader">A SqlDataReader that has not exhausted it's result set.</param>
@@ -245,6 +268,10 @@ public static class DbUtils
         {
             prop.SetValue(obj, GetNullableDateTime(reader, attr.Name));
         }
+        //else if (prop.PropertyType == typeof(IEnumerable))
+        //{
+        //    prop.SetValue(obj, GetEnumerable(reader, attr.Name, prop));
+        //}
 
 
     }

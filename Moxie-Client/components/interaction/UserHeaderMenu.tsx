@@ -48,7 +48,7 @@ const UserHeaderMenu = () => {
                                             aria-hidden="true"
                                         />
                                     )}
-                                    Edit
+                                    Settings
                                 </button>
                             )}
                         </Menu.Item>

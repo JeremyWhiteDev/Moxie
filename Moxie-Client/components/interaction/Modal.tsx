@@ -3,7 +3,7 @@ import { Fragment, useState } from "react"
 
 
 
-const Modal = ({ title, children, isOpen, open, close }: Props) => {
+const Modal = ({ title, children, isOpen, close }: Props) => {
 
 
 
@@ -54,7 +54,6 @@ type Props = {
     title: string,
     children: any,
     isOpen: boolean,
-    open: () => void,
     close: () => void
 }
 

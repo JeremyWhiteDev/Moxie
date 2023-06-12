@@ -13,7 +13,7 @@ import { useRouter } from "next/router"
 
 
 
-const AddSkillModal = ({ isOpen, open, close }: Props) => {
+const AddSkillModal = ({ isOpen, close }: Props) => {
     const [formFields, setFormFields] = useState<SkillForm>({
         name: "",
         icon: "faRocket",
@@ -70,7 +70,7 @@ const AddSkillModal = ({ isOpen, open, close }: Props) => {
     }
 
 
-    return <Modal title="Add Skill" isOpen={isOpen} open={open} close={close}>
+    return <Modal title="Add Skill" isOpen={isOpen} close={close}>
 
         <div className="mt-2 flex flex-col items-center justify-center">
             <div className="dark:border-violet-800 border-4 relative flex justify-center items-center text-8xl text-center p-4 rounded-full w-44 h-44 align-middle">
@@ -117,7 +117,6 @@ export type Tag = {
 
 type Props = {
     isOpen: boolean,
-    open: () => void,
     close: () => void
 }
 
