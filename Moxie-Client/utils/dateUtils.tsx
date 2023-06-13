@@ -33,8 +33,6 @@ const dateUtils = {
 
     },
 
-
-
 }
 
 const resolveString = (timeMeasurment: string, diffTime: number, msMeasurement: number) => {

@@ -2,7 +2,7 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import Button from "../interaction/Button"
 import FormField from "../interaction/FormField"
 import { useAuth } from "@/utils/AuthProvider"
-import { Skill } from "@/pages/skills"
+import { IdNamePair, Skill, SkillWithTags } from "@/pages/skills"
 import MultiSelect from "../interaction/MultiSelect"
 import Modal from "../interaction/Modal"
 import PopoverMenu from "../interaction/Popover"
@@ -13,15 +13,15 @@ import { useRouter } from "next/router"
 
 
 
-const AddSkillModal = ({ isOpen, close }: Props) => {
+const EditSkillModal = ({ isOpen, close, skill }: Props) => {
     const [formFields, setFormFields] = useState<SkillForm>({
-        name: "",
-        icon: "faRocket",
-        proficiencyLevel: ""
+        name: skill.name,
+        icon: skill.icon,
+        proficiencyLevel: skill.proficiencyLevel
     })
 
     const [tags, setTags] = useState<Tag[]>([])
-    const [selectedItems, setSelectedItems] = useState<any[]>([])
+    const [selectedItems, setSelectedItems] = useState<IdNamePair[]>(skill.tags)
     const router = useRouter()
 
 
@@ -36,6 +36,13 @@ const AddSkillModal = ({ isOpen, close }: Props) => {
         fetchData()
     }, [])
 
+    useEffect(() => {
+        const currentSkillTagIds = skill.tags.map((t: IdNamePair) => t.id)
+        const selectedTags = tags.filter(t => currentSkillTagIds.find((u: string) => t.id == u))
+        console.log(selectedTags)
+        setSelectedItems(selectedTags)
+    }, [tags])
+
     const updateState = (evt: ChangeEvent) => {
         const domId = evt.target.id.split("--")[1];
         const copy = { ...formFields };
@@ -47,22 +54,17 @@ const AddSkillModal = ({ isOpen, close }: Props) => {
         evt.preventDefault();
         const sendToApi = { ...formFields } as AddSkillRequest;
         sendToApi.userId = auth.user?.id as string;
-        sendToApi.tagIds = selectedItems.map(item => item.id);
+        sendToApi.tagIds = selectedItems.map(item => item.id)
+        sendToApi.proficiencyLevel = "beginner"
 
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/SkillTree`, {
-            method: "POST",
+            method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(sendToApi)
         })
         if (response.ok) {
             close();
-            setFormFields({
-                name: "",
-                icon: "faRocket",
-                proficiencyLevel: ""
-            })
-            setSelectedItems([])
-            router.push("/skills")
+            router.push(`/skills/${skill.id}`)
         }
 
 
@@ -74,8 +76,20 @@ const AddSkillModal = ({ isOpen, close }: Props) => {
         setFormFields(copy)
     }
 
+    const handleDelete = async (evt: FormEvent<HTMLButtonElement>) => {
+        evt.preventDefault();
 
-    return <Modal title="Add Skill" isOpen={isOpen} close={close}>
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/skilltree/${skill.id}`, {
+            method: "DELETE",
+        })
+        if (response.ok) {
+            close();
+            router.push(`/skills`)
+        }
+    }
+
+
+    return <Modal title="Edit Skill" isOpen={isOpen} close={close}>
 
         <div className="mt-2 flex flex-col items-center justify-center">
             <div className="dark:border-violet-800 border-4 relative flex justify-center items-center text-8xl text-center p-4 rounded-full w-44 h-44 align-middle">
@@ -84,7 +98,6 @@ const AddSkillModal = ({ isOpen, close }: Props) => {
             </div>
             <form className="w-full">
                 <FormField id="addSkill--name" label="Skill Name" stateValue={formFields.name} type="text" onChangeHandler={updateState} />
-                <FormField id="addSkill--proficiencyLevel" label="Skill Proficiency" stateValue={formFields.proficiencyLevel} type="text" onChangeHandler={updateState} />
                 <MultiSelect items={tags} label="Tags" selectedItems={selectedItems} setSelectedItems={setSelectedItems} />
 
                 <div className="mt-4 md:space-x-4">
@@ -93,6 +106,9 @@ const AddSkillModal = ({ isOpen, close }: Props) => {
                     </Button>
                     <Button type="button" onClick={close}>
                         Cancel
+                    </Button>
+                    <Button type="button" onClick={handleDelete}>
+                        Delete
                     </Button>
                 </div>
             </form>
@@ -123,7 +139,8 @@ export type Tag = {
 
 type Props = {
     isOpen: boolean,
-    close: () => void
+    close: () => void,
+    skill: SkillWithTags
 }
 
-export default AddSkillModal
+export default EditSkillModal;

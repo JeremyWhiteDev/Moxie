@@ -5,7 +5,7 @@ import { faDumbbell } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import useHoverDelay from "@/utils/hooks/useHoverDelay";
 import dateUtils from "@/utils/dateUtils";
-import { Skill } from "@/pages/skills";
+import { Skill, SkillWithTags } from "@/pages/skills";
 import { resolveIcon } from "@/utils/IconConstants";
 
 
@@ -29,7 +29,9 @@ const SkillCard = ({ skill }: Props) => {
                 </p>
             </div>
             <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                Tags:
+                Tags: {skill.tags?.length > 0
+                    ? skill.tags.map(s => s.name).join(", ")
+                    : "None"}
             </p>
 
 
@@ -48,6 +50,6 @@ const SkillCard = ({ skill }: Props) => {
 }
 
 type Props = {
-    skill: Skill
+    skill: SkillWithTags
 }
 export default SkillCard

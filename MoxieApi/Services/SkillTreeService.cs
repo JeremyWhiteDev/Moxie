@@ -22,6 +22,11 @@ public class SkillTreeService : ISkillTreeService
         return _skillTreeRepo.GetAllByUserIdWithTags(userId);
     }
 
+    public SkillTreeWithTags GetByIdWithTags(Guid skillId)
+    {
+        return _skillTreeRepo.GetByIdWithTags(skillId);
+    }
+
     public List<SkillTree> GetAll()
     {
         return _skillTreeRepo.GetAll().OrderByDescending(s => s.DateCreated).ToList();
@@ -64,6 +69,9 @@ public class SkillTreeService : ISkillTreeService
     }
     public void Delete(Guid id)
     {
+       var relationShips = _skillTreeTagRepo.GetBy("SkillTreeId", id);
+        relationShips.ForEach(r => _skillTreeTagRepo.Delete(r.Id));
+
         _skillTreeRepo.Delete(id);
     }
 
@@ -79,7 +87,7 @@ public class SkillTreeService : ISkillTreeService
     public class SkillTreeWithTags : SkillTree
     {
         [DbColumn("TagAgg")]
-        public List<Tag>? Tags { get; set; }
+        public List<IdNamePair>? Tags { get; set; } = new List<IdNamePair>();
     }
 
 }

@@ -29,7 +29,13 @@ public class SkillTreeController : ControllerBase
         return Ok(_skillTreeService.GetById(id));
     }
 
-    [HttpGet("withTags/{userId}")]
+    [HttpGet("withTags/{skillId}")]
+    public IActionResult GetByIdWithTags(Guid skillId)
+    {
+        return Ok(_skillTreeService.GetByIdWithTags(skillId));
+    }
+
+    [HttpGet("withTags/user/{userId}")]
     public IActionResult GetByUserWithTags(Guid userId)
     {
         return Ok(_skillTreeService.GetAllByUserIdWithTags(userId));

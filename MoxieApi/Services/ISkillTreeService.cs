@@ -11,4 +11,5 @@ public interface ISkillTreeService
     void Update(SkillTree skillTree, Guid id);
     void Delete(Guid id);
     public List<SkillTreeWithTags> GetAllByUserIdWithTags(Guid userId);
+    public SkillTreeWithTags GetByIdWithTags(Guid skillId);
 }

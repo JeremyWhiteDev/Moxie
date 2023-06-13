@@ -47,8 +47,18 @@ const EditTagModal = ({ isOpen, close, tag }: Props) => {
             close();
             router.push(`/user-settings/${auth?.user?.id}`)
         }
+    }
 
+    const handleDelete = async (evt: FormEvent<HTMLButtonElement>) => {
+        evt.preventDefault();
 
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tag/${tag.id}`, {
+            method: "DELETE",
+        })
+        if (response.ok) {
+            close();
+            router.push(`/user-settings/${auth?.user?.id}`)
+        }
     }
 
 
@@ -64,6 +74,9 @@ const EditTagModal = ({ isOpen, close, tag }: Props) => {
                     </Button>
                     <Button type="button" onClick={close}>
                         Cancel
+                    </Button>
+                    <Button type="button" onClick={handleDelete}>
+                        Delete
                     </Button>
                 </div>
             </form>

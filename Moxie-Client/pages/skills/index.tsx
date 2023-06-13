@@ -6,14 +6,22 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Link from "next/link"
 import { useEffect, useState } from "react";
 import AddSkillModal from "@/components/skills/AddSkillModal";
+import { getCookie } from "cookies-next";
+import { User } from "@/utils/authUtils";
 
 
 export const getServerSideProps: GetServerSideProps<{
-    initialSkills: Skill[];
-}> = async () => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/skillTree`);
+    initialSkills: SkillWithTags[];
+}> = async (context) => {
+    let initialSkills = []
+    if (getCookie("moxieUser", context)) {
+        const userCookie = getCookie("moxieUser", context) as string
+        const currentUser = JSON.parse(userCookie) as User
+
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/skillTree/withTags/user/${currentUser.id}`);
+        initialSkills = await res.json();
+    }
     //TODO: Wrap in Try/Catch with toaster
-    const initialSkills = await res.json();
     return { props: { initialSkills } };
 };
 
@@ -40,7 +48,7 @@ const Skills = ({ initialSkills }: InferGetServerSidePropsType<typeof getServerS
                 {initialSkills?.map(skill => <SkillCard skill={skill} key={skill.id} />)}
             </section>
         </Container>
-        <AddSkillModal isOpen={addSkillOpen} open={openModal} close={closeModal} />
+        <AddSkillModal isOpen={addSkillOpen} close={closeModal} />
     </>
 }
 
@@ -52,8 +60,26 @@ export type Skill = {
     proficiencyLevel: string,
     experiencePoints: number,
     availableSkillPoints: number,
-    dateCreated: string,
-    dateLastModified: string
+    dateCreated: Date,
+    dateLastModified: Date
+}
+
+export type SkillWithTags = {
+    id: string,
+    name: string,
+    icon: string,
+    userId: string,
+    proficiencyLevel: string,
+    experiencePoints: number,
+    availableSkillPoints: number,
+    dateCreated: Date,
+    dateLastModified: Date,
+    tags: IdNamePair[]
+}
+
+export type IdNamePair = {
+    id: string,
+    name: string
 }
 
 export default Skills

@@ -7,7 +7,10 @@ import {
     signInWithPopup,
     UserCredential,
     Auth,
+    UserProfile,
+    User,
 } from 'firebase/auth';
+
 import {
     EMAIL_REGISTER,
     EMAIL_SIGN_IN,
@@ -17,6 +20,7 @@ import { NextRouter } from 'next/router';
 import { deleteCookie, setCookie } from 'cookies-next';
 import firebase_app, { routeConstants } from './config';
 import { UserRegister } from '@/pages/register';
+import { getApps } from 'firebase/app';
 
 
 
@@ -28,7 +32,7 @@ export type UserLogin = {
     loginType: string
 }
 
-export type User = {
+export type AppUser = {
     id: string,
     uid: string,
     firstName: string,
@@ -46,7 +50,7 @@ export const authenticate = (userLogin: UserLogin | UserRegister, router: NextRo
     registerOrSignIn(userLogin, auth, provider, signInMethod)
         .then((userCredResp) => handleFirebaseResponse(userCredResp, userLogin as UserLogin))
         .then((userExistsResp) =>
-            handleUserExists(userExistsResp, router)
+            handleUserExists(userExistsResp, userLogin, router)
         )
         .catch((error) => {
             console.log('Email Register Error');
@@ -103,7 +107,7 @@ const registerOrSignIn = async (userLogin: UserLogin | UserRegister, auth: Auth,
     }
 };
 
-const handleFirebaseResponse = async (resp: UserCredential, userLogin: UserLogin): Promise<User> => {
+const handleFirebaseResponse = async (resp: UserCredential, userLogin: UserLogin): Promise<AppUser> => {
     userLogin.email = resp.user.email ? resp.user.email : ""
     userLogin.uid = resp.user.uid;
     userLogin.accessToken = await resp.user.getIdToken();
@@ -112,20 +116,21 @@ const handleFirebaseResponse = async (resp: UserCredential, userLogin: UserLogin
 };
 
 //check our API to ensure that the firebase user that was just logged exists in our local SQL database
-export const doesUserExistInDb = async (firebaseUserId: string): Promise<User> => {
+export const doesUserExistInDb = async (firebaseUserId: string): Promise<AppUser> => {
     return getToken().then(() =>
         fetch(`${routeConstants.apiUrl}/User?uid=${firebaseUserId}`, {
             method: 'GET',
             // headers: {
             //     Authorization: `Bearer ${token}`,
             // },
-        }).then((resp) => resp.json()).catch((error) => {
-            const auth = getAuth();
-            auth.signOut()
-            console.log('Sign In Error');
-            console.log('error code', error.code);
-            console.log('error message', error.message);
-        })
+        }).then((resp) => resp.json())
+            .catch((error) => {
+                const auth = getAuth();
+                auth.signOut()
+                console.log('Sign In Error');
+                console.log('error code', error.code);
+                console.log('error message', error.message);
+            })
     );
 };
 
@@ -140,11 +145,34 @@ export const getToken = () => {
     return currentUser.getIdToken();
 };
 
-export const handleUserExists = (userResp: User, router: NextRouter) => {
-    if (!userResp.id) {
+export const handleUserExists = async (userResp: AppUser, userLogin: UserRegister, router: NextRouter) => {
+    if (!userResp?.id) {
+        const newUser = {
+            firstName: userLogin.firstName,
+            lastName: userLogin.lastName,
+            uid: userLogin.uid,
+            imageUrl: userLogin.imageUrl,
+            dateCreated: new Date(),
+            dateLastModified: new Date()
+        } as AppUser
+        const resp = await fetch(`${routeConstants.apiUrl}/User`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(newUser)
+        })
+        if (resp.ok) {
+            const userId = await resp.json()
+            newUser.id = userId
+            const auth = getAuth();
+
+            if (auth.currentUser) {
+                const newCred: User = { ...auth.currentUser }
+                setCookie("moxieUser", JSON.stringify(newUser));
+                auth.updateCurrentUser(newCred)
+                router.push('/skills');
+            }
+        }
         //Route to new user page.
-        router.push('/createuser');
-        setCookie("moxieUser", JSON.stringify(userResp));
     } else {
         // Saves the user to localstorage
         setCookie("moxieUser", JSON.stringify(userResp));

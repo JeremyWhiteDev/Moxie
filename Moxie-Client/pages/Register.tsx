@@ -1,5 +1,5 @@
 import { User, UserLogin, authenticate } from "@/utils/authUtils"
-import { EMAIL_SIGN_IN, GOOGLE_SIGN_IN } from "@/utils/constants"
+import { EMAIL_REGISTER, EMAIL_SIGN_IN, GOOGLE_SIGN_IN } from "@/utils/constants"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { ChangeEvent, FormEvent, useState, useEffect } from "react"
@@ -14,7 +14,9 @@ const Register = () => {
         password: "",
         passwordConf: "",
         firstName: "",
-        lastName: ""
+        lastName: "",
+        uid: "",
+        imageUrl: ""
     })
     const router = useRouter();
 
@@ -33,14 +35,14 @@ const Register = () => {
 
 
     return (
-        <Container header={"Login"}>
+        <Container header={"Register"}>
             <form>
                 <FormField id="register--firstName" label="Your First" stateValue={formFields.firstName} type="type" onChangeHandler={updateState} />
                 <FormField id="register--lastName" label="Your Last Name" stateValue={formFields.lastName} type="text" onChangeHandler={updateState} />
                 <FormField id="register--email" label="Your Email" stateValue={formFields.email} type="text" onChangeHandler={updateState} />
                 <FormField id="register--password" label="Your Passward" stateValue={formFields.password} type="password" onChangeHandler={updateState} />
                 <FormField id="register--passwordConf" label="Pasword Confirmation" stateValue={formFields.passwordConf} type="password" onChangeHandler={updateState} />
-                <Button type="submit" onClick={handleAuthenticate} onClickArgs={[EMAIL_SIGN_IN]}>
+                <Button type="submit" onClick={handleAuthenticate} onClickArgs={[EMAIL_REGISTER]}>
                     Submit
                 </Button>
             </form>
@@ -51,6 +53,8 @@ const Register = () => {
 
 export type UserRegister = {
     email: string,
+    uid: string,
+    imageUrl: string,
     password: string,
     passwordConf: string,
     firstName: string,

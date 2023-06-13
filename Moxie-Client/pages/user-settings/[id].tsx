@@ -64,7 +64,7 @@ const UserSettings = ({ initialTags }: InferGetServerSidePropsType<typeof getSer
                 </Button>
             </div>
             <div className="space-y-2">
-                {initialTags?.map((tag: Tag) => <TagButton tag={tag} openModal={() => openEditTagModal(tag)} />)}
+                {initialTags?.map((tag: Tag) => <TagButton key={tag.id} tag={tag} openModal={() => openEditTagModal(tag)} />)}
             </div>
 
         </Container>

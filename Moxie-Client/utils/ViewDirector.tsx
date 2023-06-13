@@ -2,7 +2,7 @@ import Home from "@/pages"
 import { AppProps } from "next/app"
 import { GetServerSideProps, NextComponentType } from "next"
 import { getCookie } from "cookies-next"
-import { User } from "./authUtils"
+import { AppUser } from "./authUtils"
 import { useAuth } from "./AuthProvider"
 import Loading from "@/components/Loading"
 import Main from "@/components/layout/Main"
@@ -36,7 +36,7 @@ export const ViewDirectorBasedOnAuth = ({ Component, pageProps }: Props) => {
     //creating a list or object of all protected routes in app. 
     //This is going back to a similar issue I already had! this component doesn't get rerendered unless the consumer changes. That's the point of the route watcher but also we can't rely on that if someone manually types in the address.
     const resolveAuthorizedViews = () => {
-        if (auth.user?.id == undefined) {
+        if (auth.user?.firstName == undefined) {
             if (Component === Signin as NextComponentType || Component === Register as NextComponentType) {
                 return <Component />
             } else {
