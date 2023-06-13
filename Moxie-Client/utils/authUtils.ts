@@ -47,6 +47,7 @@ export type AppUser = {
 export const authenticate = (userLogin: UserLogin | UserRegister, router: NextRouter, signInMethod: string) => {
     const auth = getAuth(firebase_app);
     const provider = new GoogleAuthProvider();
+    setCookie("moxieUser", JSON.stringify(userLogin));
     registerOrSignIn(userLogin, auth, provider, signInMethod)
         .then((userCredResp) => handleFirebaseResponse(userCredResp, userLogin as UserLogin))
         .then((userExistsResp) =>
@@ -165,12 +166,12 @@ export const handleUserExists = async (userResp: AppUser, userLogin: UserRegiste
             newUser.id = userId
             const auth = getAuth();
 
-            if (auth.currentUser) {
-                const newCred: User = { ...auth.currentUser }
-                setCookie("moxieUser", JSON.stringify(newUser));
-                auth.updateCurrentUser(newCred)
-                router.push('/skills');
-            }
+            // if (auth.currentUser) {
+            //     const newCred: User = { ...auth.currentUser }
+            //     setCookie("moxieUser", JSON.stringify(newUser));
+            //     auth.updateCurrentUser(newCred)
+            //     router.push('/skills');
+            // }
         }
         //Route to new user page.
     } else {
