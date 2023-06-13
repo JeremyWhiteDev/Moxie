@@ -126,7 +126,7 @@ export const doesUserExistInDb = async (firebaseUserId: string): Promise<AppUser
         }).then((resp) => resp.json())
             .catch((error) => {
                 const auth = getAuth();
-                auth.signOut()
+                //auth.signOut()
                 console.log('Sign In Error');
                 console.log('error code', error.code);
                 console.log('error message', error.message);
