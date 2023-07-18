@@ -44,7 +44,7 @@ Moxie attempts to address these problems, but to do that effectively required bu
 
 <a href="https://reactjs.org/" title="React JS"><img src="https://github.com/get-icon/geticon/raw/master/icons/react.svg" alt="React JS" width="50px" height="50px"></a>
 <a href="https://nextjs.org/" title="NEXT JS"><img src="https://github.com/get-icon/geticon/blob/master/icons/nextjs-icon.svg" alt="NEXTJS" width="50px" height="50px"></a>
-<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" title="JavaScript"><img src="https://github.com/get-icon/geticon/raw/master/icons/javascript.svg" alt="JavaScript" width="50px" height="50px"></a>
+<a href="https://www.typescriptlang.org/" title="TypeScript"><img src="https://github.com/get-icon/geticon/blob/master/icons/typescript-icon.svg" alt="TypeScript" width="50px" height="50px"></a>
 <a href="https://tailwindcss.com/" title="Tailwind"><img src="https://github.com/get-icon/geticon/raw/master/icons/tailwindcss-icon.svg" alt="Tailwind" width="50px" height="50px"></a>
 <a href="https://flowbite.com/" title="Flowbite"><img src="https://flowbite.com/images/logo.svg" alt="Flowbite" width="50px" height="50px"></a>
 <a href="https://www.firebase.com/" title="Firebase"><img src="https://github.com/get-icon/geticon/raw/master/icons/firebase.svg" alt="Firebase" width="50px" height="50px"></a>
@@ -57,13 +57,15 @@ Moxie attempts to address these problems, but to do that effectively required bu
 
 ### Technologies I had no previous experience with:
 - NEXTJS
+- Typescript
 
 ### Why I chose these technologies
 
 1. I wanted to experiement with NEXTJS and understand how to take advantage of that framework's SSG and SSR features. The ease of Vercel hosting is also a plus.
-2. I've used TailwindCSS and flowbite components in other projects. A side goal of mine is to build reusable react components with these technologies as the foundation.
-3. This was an ambitious project, and firebase provided an extremely simple setup for handling authentication.
-4. C#/.NET/SQL Server are the backend technologies I am most familiar with and using this stack allowed me keep a high velocity in my backend issues.
+2. I have really enjoyed the strongly typed nature of C# and I wanted to bring a strongly typed appraoch to my frontend. Enter Typescript
+3. I've used TailwindCSS and flowbite components in other projects. A side goal of mine is to build reusable react components with these technologies as the foundation.
+4. This was an ambitious project, and firebase provided an extremely simple setup for handling authentication.
+5. C#/.NET/SQL Server are the backend technologies I am most familiar with and using this stack allowed me keep a high velocity in my backend issues.
 
 
 ## Challenges Faced
