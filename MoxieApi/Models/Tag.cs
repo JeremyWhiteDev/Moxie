@@ -17,4 +17,6 @@ public class Tag : BaseEntity<Tag>
     [DbColumn("[Moxie].[dbo].[Tag].[Name]")]
     public string Name { get; set; }
 
+    [DbColumn("[Moxie].[dbo].[Tag].[UserId]")]
+    public Guid UserId { get; set; }
 }

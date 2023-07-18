@@ -14,6 +14,12 @@ public class SkillTree : BaseEntity<SkillTree>
     [DbColumn("[Moxie].[dbo].[SkillTree].[Id]")]
     public Guid? Id { get; set; }
 
+    [DbColumn("[Moxie].[dbo].[SkillTree].[Name]")]
+    public string Name { get; set; }
+
+    [DbColumn("[Moxie].[dbo].[SkillTree].[Icon]")]
+    public string Icon { get; set; }
+
     [DbColumn("[Moxie].[dbo].[SkillTree].[UserId]")]
     public Guid UserId { get; set; }
 

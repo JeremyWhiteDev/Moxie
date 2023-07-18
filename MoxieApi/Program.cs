@@ -22,6 +22,11 @@ builder.Services.AddTransient<ISkillTreeRepo, SkillTreeRepo>();
 builder.Services.AddTransient<ISkillGoalService, SkillGoalService>();
 builder.Services.AddTransient<ISkillGoalRepo, SkillGoalRepo>();
 
+//Tag Transients
+builder.Services.AddTransient<ITagService, TagService>();
+builder.Services.AddTransient<ITagRepo, TagRepo>();
+
+builder.Services.AddTransient<ISkillTreeTagRepo, SkillTreeTagRepo>();
 
 var app = builder.Build();
 
@@ -30,6 +35,13 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    app.UseCors(options =>
+    {
+        options.AllowAnyOrigin();
+        options.AllowAnyMethod();
+        options.AllowAnyHeader();
+    });
 }
 
 app.UseHttpsRedirection();

@@ -20,7 +20,7 @@ public class SkillGoalService : ISkillGoalService
 
     public SkillGoal GetById(Guid id)
     {
-        return _repo.GetById(id);
+        return _repo.GetBy("Id", id).FirstOrDefault();
     }
 
     public Guid Add(SkillGoal skillTree)

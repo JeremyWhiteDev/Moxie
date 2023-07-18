@@ -9,7 +9,7 @@ using System.Text;
 
 namespace MoxieApi.Repositories;
 
-public class BaseRepo<T>
+public class BaseRepo<T> : IBaseRepo<T>
 {
     private readonly string _connectionString;
 
@@ -55,8 +55,7 @@ public class BaseRepo<T>
         }
     }
 
-
-    public T GetById(Guid id)
+    public List<T> GetBy(string columnName, object value)
     {
         using (var conn = Connection)
         {
@@ -66,17 +65,17 @@ public class BaseRepo<T>
                 cmd.CommandText = $@"
                                     SELECT {CreateSelectAllString()}
                                     FROM {_tableName}
-                                    WHERE {GetIdColumnName()} = @Id";
-                DbUtils.AddParameter(cmd, "@Id", id);
+                                    WHERE {ResolveColumnName(columnName)} = @Entity";
+                DbUtils.AddParameter(cmd, "@Entity", value);
                 var reader = cmd.ExecuteReader();
-                T item = default(T);
-                if (reader.Read())
+                List<T> list = new List<T>();
+                while (reader.Read())
                 {
-                    item = (T)Activator.CreateInstance(typeof(T), reader);
+                    list.Add((T)Activator.CreateInstance(typeof(T), reader));
                 };
 
                 reader.Close();
-                return item;
+                return list;
             }
         }
     }
@@ -113,13 +112,32 @@ public class BaseRepo<T>
                 cmd.CommandText = $@"
                                     UPDATE {_tableName}
                                     SET {CreateUpdateString()}
-                                    WHERE {GetIdColumnName()} = @EntityId";
+                                    WHERE {ResolveColumnName("Id")} = @EntityId";
                 DbUtils.AddParameter(cmd, "@EntityId", id);
                 DbUtils.AddParameterList(cmd, _tableColumns, obj);
                 cmd.ExecuteNonQuery();
             }
         }
     }
+
+    public void DeleteBy(string columnName, object value)
+    {
+        using (var conn = Connection)
+        {
+            conn.Open();
+            using (var cmd = conn.CreateCommand())
+            {
+
+
+                cmd.CommandText = $@"DELETE FROM {_tableName}
+                                    WHERE {ResolveColumnName(columnName)} = @EntityId";
+                DbUtils.AddParameter(cmd, "@EntityId", value);
+
+                cmd.ExecuteNonQuery();
+            }
+        }
+    }
+
 
     public void Delete(Guid id) 
     {
@@ -131,7 +149,7 @@ public class BaseRepo<T>
 
 
                 cmd.CommandText = $@"DELETE FROM {_tableName}
-                                    WHERE {GetIdColumnName()} = @EntityId";
+                                    WHERE {ResolveColumnName("Id")} = @EntityId";
                 DbUtils.AddParameter(cmd, "@EntityId", id);
 
                 cmd.ExecuteNonQuery();
@@ -165,10 +183,9 @@ public class BaseRepo<T>
 
     }
 
-
-    private string GetIdColumnName()
+    private string ResolveColumnName(string columnName)
     {
-        var IdColumn = _tableColumns.FirstOrDefault(c => c.Value.columnName.Contains("[Id]"));
+        var IdColumn = _tableColumns.FirstOrDefault(c => c.Value.columnName.Contains($"[{columnName}]"));
         return IdColumn.Value.columnName.ToString();
     }
 

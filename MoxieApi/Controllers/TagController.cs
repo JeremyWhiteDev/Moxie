@@ -28,6 +28,12 @@ public class TagController : ControllerBase
         return Ok(_tagService.GetById(id));
     }
 
+    [HttpGet("user/{id}")]
+    public IActionResult GetByUser(Guid id)
+    {
+        return Ok(_tagService.GetByUser(id));
+    }
+
     [HttpPost]
     public IActionResult Add(Tag tag)
     {

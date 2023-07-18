@@ -7,7 +7,8 @@ namespace MoxieApi.Repositories
         Guid Add(T type);
         void Delete(Guid id);
         List<T> GetAll();
-        T GetById(Guid id);
+        List<T> GetBy(string columnName, object value);
         void Update(T type, Guid id);
+        void DeleteBy(string columnName, object value);
     }
 }
