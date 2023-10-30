@@ -1,11 +1,10 @@
 # Moxie
 
-![Moxie-Screenshot-1](screenshots/Moxie-gif-1.gif)
+![Moxie-GIF-1](screenshots/Moxie-gif-1.gif)
 
 Moxie is a personal dashboard that allows users to track and level up their skills and hobbies. 
 
-This project was created as a Full Stack Capstone project while attending Nashville Software School's Full Stack Web Development Bootcamp. It was completed with one week of planning and 3.5 weeks of coding.
-
+This project was created as a Full Stack Capstone project while attending Nashville Software School's Full Stack Web Development Bootcamp. It was completed with one week of planning and 3.5 weeks of coding. The majority of work took place in Summer 2023.
 ## Table of Contents
 
 - [Moxie](#moxie)
@@ -31,9 +30,11 @@ This application was built to solve the problem of managing skills and hobbies. 
 - Trying something way too challening too quickly.
 - Getting frustrated by my apparent lack of progress.
 
-Moxie allows users to keep log their skills/hobbies, create tags and attach them to skills.
+Moxie allows users to log their skills/hobbies, create tags and attach them to skills.
 
-Moxie was designed to eventually have a system of reward. Video games have perfected this system of "do something" > "get rewarded with XP" > "XP gets you cool stuff." I want to bring that same concept to Moxie. Unfortunately, the complexities of getting base functionality working in Moxie slowed my progress significantly, as describbed in the [Lessons Learned](#lessons-learned) section.
+Moxie was designed to eventually have a system of reward. Video games have perfected this system of "do something" > "get rewarded with XP" > "XP gets you cool stuff." I want to bring that same concept to Moxie. Unfortunately, the complexities of getting base functionality working in the Moxie frontend slowed my progress significantly, as described in the [Lessons Learned](#lessons-learned) section.
+
+I still hope to build on this concept in the future and come back to this application with a fresh perspective.
 
 # Screenshots/Gifs
 
@@ -65,15 +66,15 @@ Moxie was designed to eventually have a system of reward. Video games have perfe
 ### Why I chose these technologies
 
 1. I wanted to experiement with NEXTJS and understand how to take advantage of that framework's SSG and SSR features. The ease of Vercel hosting is also a plus.
-2. I have really enjoyed the strongly typed nature of C# and I wanted to bring a strongly typed appraoch to my frontend. Enter Typescript
+2. I have really enjoyed the strongly typed nature of C# and I wanted to bring a strongly typed approach to the frontend.
 3. I've used TailwindCSS and flowbite components in other projects. A side goal of mine is to build reusable react components with these technologies as the foundation.
 4. This was an ambitious project, and firebase provided an extremely simple setup for handling authentication.
-5. C#/.NET/SQL Server are the backend technologies I am most familiar with and using this stack allowed me keep a high velocity in my backend issues.
+5. C#/.NET/SQL Server are the backend technologies I was most familiar with and using this stack allowed me keep a high velocity in my backend issues.
 
 
 ## Challenges Faced
 
-One challenge I faced was handling authorized vs. unauthorized routes in NEXTJS. My former experience with ReactRouter was very straightfoward for conditionally rendering routes for different user roles/situations. But I struggled with implementing similar behaviors with my NEXTJS app. Because the node server running and delivering the components for each route doesn't necessarily know the exact state of the client side logged in user. I implemented an imperfect cookie solution, but there is definitely much more improvement needed here.
+One challenge I faced was handling authorized vs. unauthorized routes in NEXTJS. My former experience with ReactRouter was very straightfoward for conditionally rendering routes for different user roles/situations. But I struggled with implementing similar behaviors with my NEXTJS app. The Node server running and delivering the components for each route doesn't know the exact state of the client side logged in user. I implemented an imperfect cookie solution, but there is definitely much more improvement needed here.
 
 One challange I took on that I really enjoyed was creating my own ORM-like API by using inheritance, interfaces, generic types, and C# Attributes. The combination of these tools allowed me to create dynamic methods for CRUD operations that lived in a base repo class. Other classes could inherit from this base, which allowed for very fast expansion of the backend API.
 
