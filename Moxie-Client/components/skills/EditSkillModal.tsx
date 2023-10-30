@@ -52,12 +52,14 @@ const EditSkillModal = ({ isOpen, close, skill }: Props) => {
 
     const handleSubmit = async (evt: FormEvent<HTMLButtonElement>) => {
         evt.preventDefault();
-        const sendToApi = { ...formFields } as AddSkillRequest;
+        const sendToApi = { ...formFields } as EditSkillRequest;
+        sendToApi.dateCreated = skill.dateCreated
+        sendToApi.dateLastModified = skill.dateLastModified
         sendToApi.userId = auth.user?.id as string;
         sendToApi.tagIds = selectedItems.map(item => item.id)
         sendToApi.proficiencyLevel = "beginner"
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/SkillTree`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/SkillTree/${skill.id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(sendToApi)
@@ -123,12 +125,14 @@ type SkillForm = {
     proficiencyLevel: string
 }
 
-type AddSkillRequest = {
+type EditSkillRequest = {
     name: string,
     icon: string,
     userId: string,
     proficiencyLevel: string,
-    tagIds: string[]
+    tagIds: string[],
+    dateCreated: Date,
+    dateLastModified: Date
 }
 
 export type Tag = {
