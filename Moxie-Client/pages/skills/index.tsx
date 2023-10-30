@@ -7,7 +7,7 @@ import Link from "next/link"
 import { useEffect, useState } from "react";
 import AddSkillModal from "@/components/skills/AddSkillModal";
 import { getCookie } from "cookies-next";
-import { User } from "@/utils/authUtils";
+import { AppUser } from "@/utils/authUtils";
 
 
 export const getServerSideProps: GetServerSideProps<{
@@ -16,7 +16,7 @@ export const getServerSideProps: GetServerSideProps<{
     let initialSkills = []
     if (getCookie("moxieUser", context)) {
         const userCookie = getCookie("moxieUser", context) as string
-        const currentUser = JSON.parse(userCookie) as User
+        const currentUser = JSON.parse(userCookie) as AppUser
 
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/skillTree/withTags/user/${currentUser.id}`);
         initialSkills = await res.json();

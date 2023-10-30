@@ -13,7 +13,7 @@ import {
 import { getCookie, hasCookie, setCookie } from 'cookies-next';
 import { AppUser, doesUserExistInDb } from './authUtils';
 import { GetServerSideProps } from 'next';
-import firebase_app from './config';
+import firebase_app, { routeConstants } from './config';
 import { useRouter } from 'next/router';
 
 const AuthContext = createContext<authProvider>({
@@ -58,10 +58,31 @@ export const AuthProvider = ({ ...props }) => {
                 const resp = await doesUserExistInDb(fbUser.uid)
                 if (!resp?.id) {
 
+                    if (getCookie("moxieUser")) {
+                        const currentUser = JSON.parse(getCookie("moxieUser") as string) as AppUser;
+                        const newUser = {
+                            firstName: currentUser.firstName,
+                            lastName: currentUser.lastName,
+                            uid: fbUser.uid,
+                            imageUrl: currentUser.imageUrl,
+                            dateCreated: new Date(),
+                            dateLastModified: new Date()
+                        } as AppUser
+                        const addUser = await fetch(`${routeConstants.apiUrl}/User`, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(newUser)
+                        })
+                        if (addUser.ok) {
+                            const userId = await addUser.json()
+                            newUser.id = userId
+                            setCookie("moxieUser", JSON.stringify(newUser));
+                            setUserCookie(newUser)
+                            setIsLoading(false)
+                            router.push('/');
 
-                    //Route to new user page.
-                    //router.push('/createUserAccount');
-                    //setCookie("moxieUser", JSON.stringify(resp));
+                        }
+                    }
                 } else {
                     // Saves the user to localstorage
                     setCookie("moxieUser", JSON.stringify(resp));
