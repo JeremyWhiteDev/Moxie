@@ -40,6 +40,7 @@ export const ViewDirectorBasedOnAuth = ({ Component, pageProps }: Props) => {
             if (Component === Signin as NextComponentType || Component === Register as NextComponentType) {
                 return <Component />
             } else {
+                // return <Component />
                 return <Loading />
             }
         } else {

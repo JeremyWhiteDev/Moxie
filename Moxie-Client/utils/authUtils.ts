@@ -19,8 +19,8 @@ import {
 import { NextRouter } from 'next/router';
 import { deleteCookie, setCookie } from 'cookies-next';
 import firebase_app, { routeConstants } from './config';
-import { UserRegister } from '@/pages/register';
 import { getApps } from 'firebase/app';
+import { UserRegister } from '@/pages/register';
 
 
 
@@ -51,7 +51,7 @@ export const authenticate = (userLogin: UserLogin | UserRegister, router: NextRo
     registerOrSignIn(userLogin, auth, provider, signInMethod)
         .then((userCredResp) => handleFirebaseResponse(userCredResp, userLogin as UserLogin))
         .then((userExistsResp) =>
-            handleUserExists(userExistsResp, userLogin, router)
+            handleUserExists(userExistsResp, userLogin as UserRegister, router)
         )
         .catch((error) => {
             console.log('Email Register Error');
