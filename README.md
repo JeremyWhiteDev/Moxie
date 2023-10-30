@@ -2,7 +2,7 @@
 
 ![Moxie-Screenshot-1](screenshots/)
 
-Moxie is a personal dashboard that allows users to track and level up their skills and hobbies. Todo lists can feel neverending, and managing goals is often overwhelming. But with this app, you can build up your weightlifting, woodworking, music, or cooking Moxie by creating a variety of different goals and activities that have constant, real rewards.
+Moxie is a personal dashboard that allows users to track and level up their skills and hobbies. 
 
 This project was created as a Full Stack Capstone project while attending Nashville Software School's Full Stack Web Development Bootcamp. It was completed with one week of planning and 3.5 weeks of coding.
 
@@ -15,6 +15,7 @@ This project was created as a Full Stack Capstone project while attending Nashvi
     - [Technologies I had no previous experience with:](#technologies-i-had-no-previous-experience-with)
     - [Why I chose these technologies](#why-i-chose-these-technologies)
   - [Challenges Faced](#challenges-faced)
+  - [Lessons Learned](#lessons-learned)
   - [Current Features](#current-features)
     - [For Authorized Users:](#for-authorized-users)
   - [Possible Future Features](#upcoming-features)
@@ -30,15 +31,16 @@ This project was created as a Full Stack Capstone project while attending Nashvi
 
 ![Moxie-Gif-3](screenshots/)
 
-This application was built to solve the problem of managing skills and hobbies. Before starting this app, I thought about my process for learning and maintaining different skills and I recognized some  bad patterns: 
+This application was built to solve the problem of managing skills and hobbies. Before starting this app, I thought about my process for learning and maintaining different skills and I recognized some bad patterns: 
 
 - Investing in high caliber equipment too soon.
 - Trying something way too challening too quickly.
-- Not keeping up with small, continuous practice sessions.
 - Getting frustrated by my apparent lack of progress.
-- Abondoning or putting aside that skill because 'I'm not where I think I should be.'
 
-Moxie attempts to address these problems, but to do that effectively required building a system of reward. Video games have perfected this system of "do something simple a lot -> gain XP -> XP unlocks new abilities -> new abilities allow taking on tougher challenges -> tougher challenges gain more XP -> Higher XP increases a player's level -> a higher level allows better equipment -> better equipment -> better equipment allows for even tougher challenges -> and it just keeps going. I adopted this system and applied its key principles to real life skills.
+Moxie allows users to keep log their skills/hobbies, create tags and attach them to skills.
+
+Moxie was designed to eventually have a system of reward. Video games have perfected this system of "do something" > "get rewarded with XP" > "XP gets you cool stuff." I want to bring that same concept to Moxie. Unfortunately, the complexities of getting base functionality working in Moxie slowed my progress significantly, as describbed in the [Lessons Learned](#lessons-learned) section.
+
 
 ## Technologies Used
 
@@ -76,7 +78,7 @@ One challange I took on that I really enjoyed was creating my own ORM-like API b
 
 ## Lessons Learned
 
-I was naive using NEXTJS no prior experience and expecting I could use the same exact patterns as React Router. When I realized that I needed to treat authorized and unauthorized routes differently than I was used to, I should've followed the patterns laid out by NEXTJS, instead of trying to come up with my own patterns/flow. This ended up me creating an auth flow that is **overly complicated, buggy, and hard to grok.** 
+I was naive using NEXTJS with no prior experience and expecting I could use the same exact patterns as React Router. When I realized that I needed to treat authorized and unauthorized routes differently than I was used to, I should've followed the patterns laid out by NEXTJS, instead of trying to come up with my own patterns/flow. The result was an auth flow that is **overly complicated, buggy, and hard to grok.** 
 
 The time I spent forcing NEXTJS into a pattern it wasn't designed for would've been much better spent creating features and completing other tickets. Because of my refusal to adapt, the scope of what I was able to accomplish within the timeframe for this project was significantly narrowed, and some of the authentication is still rather _buggy._
 
@@ -116,38 +118,29 @@ cp .sample.env .env.local
 
 4. Update the `.env.local` file with the Firebase API keys created in the previous step.
 5. Make sure that Node.js and npm are installed on your machine. <a href="https://docs.npmjs.com/downloading-and-installing-node-js-and-npm">Click here for installation.</a>
-6. Run the following command in the terminal from the `mooch-client` directory:
+6. Run the following command in the terminal from the `Moxie-Client` directory:
 
 ```
 npm install
 ```
 
-7. Open your SQL Server and copy/paste the SQL script located in `Mooch-Lightning/Data` Directory
-8. Paste the script into your SQL client and run. This will create the database and schema, and create some seed data as well
+7. Open your SQL Server and copy the SQL script located in `MoxieApi/Database` Directory
+8. Paste the script into your SQL client and run. This will create the database and schema
 
-9.In Visual Studio, open the `Mooch-Lighting.sln`
+9.In Visual Studio, open the `MoxieApi.sln`
 10. Right click on the `Dependencies` folder and select `Reload`
-11. Right click on the`Mooch-Lightning` project in the Solution Explorer and select `Manage User Secrets`
-12. Fill in the following JSON data, including the location of your database server and the firebase config data.
+11. Right click on the `MoxieApi` project in the Solution Explorer and select `Manage User Secrets`
+12. Fill in the following JSON data, with the location of your database server.
 
 ```
 {
   "ConnectionStrings": {
     "DefaultConnection": "server=<YourLocalSQLServerDatabaseConnection>;integrated security=true;Trust Server Certificate=true"
   },
-  "FirebaseProjectId": "mooch-lightning",
-  "FirebaseConfig": {
-    "apiKey": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-    "authDomain": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-    "projectId": "XXXXXXXXXX",
-    "storageBucket": "XXXXXXXXXX",
-    "messagingSenderId": "XXXXXXXXXX",
-    "appId": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-  }
 }
 ```
 13. Run the Backend from Visual Studio
-14. Run the Frontend by navigating to the `mooch-client` folder and running `npm start`
+14. Run the Frontend by navigating to the `Moxie-Client` folder and running `npm run dev`
 15. The frontend should start on `http://localhost:3000/`
 
 16. Enjoy the App!
