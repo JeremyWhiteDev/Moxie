@@ -62,3 +62,4 @@ export type UserRegister = {
 }
 
 export default Register
+export default Register
