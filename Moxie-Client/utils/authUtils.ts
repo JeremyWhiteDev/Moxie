@@ -7,8 +7,6 @@ import {
     signInWithPopup,
     UserCredential,
     Auth,
-    UserProfile,
-    User,
 } from 'firebase/auth';
 
 import {
@@ -19,7 +17,6 @@ import {
 import { NextRouter } from 'next/router';
 import { deleteCookie, setCookie } from 'cookies-next';
 import firebase_app, { routeConstants } from './config';
-import { getApps } from 'firebase/app';
 import { UserRegister } from '@/pages/register';
 
 
@@ -124,8 +121,8 @@ export const doesUserExistInDb = async (firebaseUserId: string): Promise<AppUser
             // headers: {
             //     Authorization: `Bearer ${token}`,
             // },
-        }).then((resp) => resp.json())
-            .catch((error) => {
+        }).then(resp => resp.json())
+            .catch(error => {
                 const auth = getAuth();
                 //auth.signOut()
                 console.log('Sign In Error');
@@ -164,14 +161,8 @@ export const handleUserExists = async (userResp: AppUser, userLogin: UserRegiste
         if (resp.ok) {
             const userId = await resp.json()
             newUser.id = userId
-            const auth = getAuth();
 
-            // if (auth.currentUser) {
-            //     const newCred: User = { ...auth.currentUser }
-            //     setCookie("moxieUser", JSON.stringify(newUser));
-            //     auth.updateCurrentUser(newCred)
-            //     router.push('/skills');
-            // }
+            router.push('/skills');
         }
         //Route to new user page.
     } else {

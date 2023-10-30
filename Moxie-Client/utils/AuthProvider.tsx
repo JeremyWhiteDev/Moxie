@@ -10,9 +10,8 @@ import {
     getAuth,
 } from 'firebase/auth';
 
-import { getCookie, hasCookie, setCookie } from 'cookies-next';
+import { getCookie, setCookie } from 'cookies-next';
 import { AppUser, doesUserExistInDb } from './authUtils';
-import { GetServerSideProps } from 'next';
 import firebase_app, { routeConstants } from './config';
 import { useRouter } from 'next/router';
 
@@ -79,6 +78,8 @@ export const AuthProvider = ({ ...props }) => {
                             setCookie("moxieUser", JSON.stringify(newUser));
                             setUserCookie(newUser)
                             setIsLoading(false)
+                            router.push('/');
+
                         }
                     }
 

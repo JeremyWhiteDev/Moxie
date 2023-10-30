@@ -1,10 +1,8 @@
 import SkillCard from "@/components/skills/SkillCard"
 import Button from "@/components/interaction/Button";
 import Container from "@/components/layout/Container"
-import { routeConstants } from "@/utils/config";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import Link from "next/link"
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AddSkillModal from "@/components/skills/AddSkillModal";
 import { getCookie } from "cookies-next";
 import { AppUser } from "@/utils/authUtils";
