@@ -1,6 +1,6 @@
 # Moxie
 
-![Moxie-Screenshot-1](screenshots/)
+![Moxie-Screenshot-1](screenshots/Moxie-gif-1.gif)
 
 Moxie is a personal dashboard that allows users to track and level up their skills and hobbies. 
 
@@ -25,12 +25,6 @@ This project was created as a Full Stack Capstone project while attending Nashvi
 
 ## Project Description
 
-![Moxie-Screenshot-2](screenshots/)
-
-![Moxie-Gif-2](screenshots/)
-
-![Moxie-Gif-3](screenshots/)
-
 This application was built to solve the problem of managing skills and hobbies. Before starting this app, I thought about my process for learning and maintaining different skills and I recognized some bad patterns: 
 
 - Investing in high caliber equipment too soon.
@@ -41,6 +35,13 @@ Moxie allows users to keep log their skills/hobbies, create tags and attach them
 
 Moxie was designed to eventually have a system of reward. Video games have perfected this system of "do something" > "get rewarded with XP" > "XP gets you cool stuff." I want to bring that same concept to Moxie. Unfortunately, the complexities of getting base functionality working in Moxie slowed my progress significantly, as describbed in the [Lessons Learned](#lessons-learned) section.
 
+# Screenshots/Gifs
+
+## Adding a skill
+![Moxie-Gif-2](screenshots/Moxie-gif-2.gif)
+
+### Adding/Editing a Tag
+![Moxie-Gif-3](screenshots/Moxie-gif-3.gif)
 
 ## Technologies Used
 
