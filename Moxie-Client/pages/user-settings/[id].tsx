@@ -3,7 +3,7 @@ import { useState } from "react";
 import Container from "@/components/layout/Container";
 import { Tag } from "@/components/skills/AddSkillModal";
 import { getCookie } from "cookies-next";
-import { User } from "@/utils/authUtils";
+import { AppUser } from "@/utils/authUtils";
 import Button from "@/components/interaction/Button";
 import AddTagModal from "@/components/tags/AddTagModal";
 import TagButton from "@/components/tags/TagButton";
@@ -15,7 +15,7 @@ export const getServerSideProps: GetServerSideProps<{
     let initialTags = []
     if (getCookie("moxieUser", context)) {
         const userCookie = getCookie("moxieUser", context) as string
-        const currentUser = JSON.parse(userCookie) as User
+        const currentUser = JSON.parse(userCookie) as AppUser
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tag/user/${currentUser.id}`);
         initialTags = await response.json();
     }
@@ -30,6 +30,9 @@ const UserSettings = ({ initialTags }: InferGetServerSidePropsType<typeof getSer
     const [addTagOpen, setAddTagOpen] = useState<boolean>(false)
     const [editTagOpen, setEditTagOpen] = useState<boolean>(false)
     const [editTag, setEditTag] = useState<Tag>()
+
+    const userCookie = getCookie("moxieUser") as string
+    const currentUser = JSON.parse(userCookie) as AppUser
 
     const openAddTagModal = () => {
         setAddTagOpen(true)
@@ -49,12 +52,13 @@ const UserSettings = ({ initialTags }: InferGetServerSidePropsType<typeof getSer
 
     return <>
         <Container header="Settings">
-            <div className="border-b border-gray-500 flex justify-between mb-12">
+            <div className="border-b border-gray-500 flex justify-between mb-4">
 
                 <h1 className="dark:text-white text-left  md:text-left max-w-32 text-2xl pb-4 mt-5 ">
                     User Profile
                 </h1>
             </div>
+            {currentUser.firstName} {currentUser.lastName}
             <div className="border-b border-gray-500 flex justify-between mb-12">
                 <h1 className="dark:text-white text-left  md:text-left max-w-32 text-2xl pb-4 mt-5 ">
                     Tags

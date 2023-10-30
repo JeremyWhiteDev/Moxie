@@ -1,4 +1,4 @@
-import { User, UserLogin, authenticate } from "@/utils/authUtils"
+import { AppUser, UserLogin, authenticate } from "@/utils/authUtils"
 import { EMAIL_SIGN_IN, GOOGLE_SIGN_IN } from "@/utils/constants"
 import Link from "next/link"
 import { useRouter } from "next/router"

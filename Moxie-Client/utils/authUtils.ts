@@ -47,10 +47,11 @@ export type AppUser = {
 export const authenticate = (userLogin: UserLogin | UserRegister, router: NextRouter, signInMethod: string) => {
     const auth = getAuth(firebase_app);
     const provider = new GoogleAuthProvider();
+    setCookie("moxieUser", JSON.stringify(userLogin));
     registerOrSignIn(userLogin, auth, provider, signInMethod)
         .then((userCredResp) => handleFirebaseResponse(userCredResp, userLogin as UserLogin))
         .then((userExistsResp) =>
-            handleUserExists(userExistsResp, userLogin, router)
+            handleUserExists(userExistsResp, userLogin as UserRegister, router)
         )
         .catch((error) => {
             console.log('Email Register Error');
@@ -161,16 +162,8 @@ export const handleUserExists = async (userResp: AppUser, userLogin: UserRegiste
             body: JSON.stringify(newUser)
         })
         if (resp.ok) {
-            const userId = await resp.json()
-            newUser.id = userId
-            const auth = getAuth();
+            router.push('/skills');
 
-            if (auth.currentUser) {
-                const newCred: User = { ...auth.currentUser }
-                setCookie("moxieUser", JSON.stringify(newUser));
-                auth.updateCurrentUser(newCred)
-                router.push('/skills');
-            }
         }
         //Route to new user page.
     } else {

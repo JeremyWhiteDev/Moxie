@@ -21,7 +21,8 @@ public class UserController : ControllerBase
     {
         if (uid != null)
         {
-            return Ok(_userService.GetByFbUid(uid));
+            User user = _userService.GetByFbUid(uid);
+            return Ok(user != null ? user : false);
         }
         return Ok(_userService.GetAll());
     }
