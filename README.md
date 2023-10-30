@@ -4,7 +4,8 @@
 
 Moxie is a personal dashboard that allows users to track and level up their skills and hobbies. 
 
-This project was created as a Full Stack Capstone project while attending Nashville Software School's Full Stack Web Development Bootcamp. It was completed with one week of planning and 3.5 weeks of coding. The majority of work took place in Summer 2023.
+This project was created as a Full Stack Capstone project while attending Nashville Software School's Full Stack Web Development Bootcamp. It was completed with one week of planning and 3.5 weeks of coding. The majority of work took place in May/June 2023.
+
 ## Table of Contents
 
 - [Moxie](#moxie)
@@ -74,13 +75,13 @@ I still hope to build on this concept in the future and come back to this applic
 
 ## Challenges Faced
 
-One challenge I faced was handling authorized vs. unauthorized routes in NEXTJS. My former experience with ReactRouter was very straightfoward for conditionally rendering routes for different user roles/situations. But I struggled with implementing similar behaviors with my NEXTJS app. The Node server running and delivering the components for each route doesn't know the exact state of the client side logged in user. I implemented an imperfect cookie solution, but there is definitely much more improvement needed here.
+One challenge I faced was handling authorized vs. unauthorized routes in NEXTJS. In my former experience with ReactRouter, I learned how to conditionally render routes for different user roles/situations. But I struggled with implementing similar behaviors with my NEXTJS app. The Node server running and delivering the components for each route doesn't know the exact state of the client side logged in user. I implemented an imperfect cookie solution, but there is definitely much more improvement needed here.
 
 One challange I took on that I really enjoyed was creating my own ORM-like API by using inheritance, interfaces, generic types, and C# Attributes. The combination of these tools allowed me to create dynamic methods for CRUD operations that lived in a base repo class. Other classes could inherit from this base, which allowed for very fast expansion of the backend API.
 
 ## Lessons Learned
 
-I was naive using NEXTJS with no prior experience and expecting I could use the same exact patterns as React Router. When I realized that I needed to treat authorized and unauthorized routes differently than I was used to, I should've followed the patterns laid out by NEXTJS, instead of trying to come up with my own patterns/flow. The result was an auth flow that is **overly complicated, buggy, and hard to grok.** 
+I was naive using NEXTJS with no prior experience and expecting I could use the same exact patterns as React Router. When I realized that I needed to treat authorized and unauthorized routes differently than I was used to, I should've followed the patterns laid out by NEXTJS, instead of trying to come up with my own patterns/flow. Unauthorized routes weren't even a core part of my application, I just got stuck in a cycle of working on something that delivered **little to no value to users.** The result was an auth flow that is **overly complicated, unnecessary, buggy, and hard to grok.** 
 
 The time I spent forcing NEXTJS into a pattern it wasn't designed for would've been much better spent creating features and completing other tickets. Because of my refusal to adapt, the scope of what I was able to accomplish within the timeframe for this project was significantly narrowed, and some of the authentication is still rather _buggy._
 
