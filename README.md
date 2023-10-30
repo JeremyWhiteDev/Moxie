@@ -18,7 +18,7 @@ This project was created as a Full Stack Capstone project while attending Nashvi
   - [Current Features](#current-features)
     - [For Authorized Users:](#for-authorized-users)
   - [Possible Future Features](#upcoming-features)
-  - [🚧How to Install and Run🚧](#how-to-install-and-run)
+  - [How to Install and Run](#how-to-install-and-run)
   - [Credits](#credits)
   - [Links](#links)
 
@@ -70,9 +70,15 @@ Moxie attempts to address these problems, but to do that effectively required bu
 
 ## Challenges Faced
 
-One challenge I faced was learning some of the patters used with NEXTJS and how best to handle authorized vs. unauthorized routes. My former experience with ReactRouter was very straightfoward for conditionally rendering routes for different user roles/situations. But struggled with implementing similar behaviors with my NEXTJS app where the node server running and delivering the components for each route doesn't necessarily know the exact state of the client side logged in user. I found some patterns that showed a single `<SignIn />` component being rendered in the client to the user in the case that they weren't logged in, the tradeoff being that normal site navigation to routes such as "/" "/faq" "/about" aren't accessible if not signed in. I ended up implementing an imperfect cookies solution instead. 
+One challenge I faced was handling authorized vs. unauthorized routes in NEXTJS. My former experience with ReactRouter was very straightfoward for conditionally rendering routes for different user roles/situations. But I struggled with implementing similar behaviors with my NEXTJS app. Because the node server running and delivering the components for each route doesn't necessarily know the exact state of the client side logged in user. I implemented an imperfect cookie solution, but there is definitely much more improvement needed here.
 
-I think this is an interesting complication of the NEXTJS framework. Consideration for what context a react component is going to be executed in is critical. More research/work is necessary to provide a production ready authorized routing experience. 
+One challange I took on that I really enjoyed was creating my own ORM-like API by using inheritance, interfaces, generic types, and C# Attributes. The combination of these tools allowed me to create dynamic methods for CRUD operations that lived in a base repo class. Other classes could inherit from this base, which allowed for very fast expansion of the backend API.
+
+## Lessons Learned
+
+I was naive using NEXTJS no prior experience and expecting I could use the same exact patterns as React Router. When I realized that I needed to treat authorized and unauthorized routes differently than I was used to, I should've followed the patterns laid out by NEXTJS, instead of trying to come up with my own patterns/flow. This ended up me creating an auth flow that is **overly complicated, buggy, and hard to grok.** 
+
+The time I spent forcing NEXTJS into a pattern it wasn't designed for would've been much better spent creating features and completing other tickets. Because of my refusal to adapt, the scope of what I was able to accomplish within the timeframe for this project was significantly narrowed, and some of the authentication is still rather _buggy._
 
 ## Current Features
 
@@ -86,7 +92,6 @@ I think this is an interesting complication of the NEXTJS framework. Considerati
 ## Upcoming Features
 
 - Deploying Moxie
-- Users can feel certain that updates to the app won't break existing features (front end and back end testing implemented)
 - Users can create activity logs that generate XP.
 - Users can set goals and assign rewards when certain goals are met.
 - Users can create specific challenges to try to beat.
@@ -94,10 +99,58 @@ I think this is an interesting complication of the NEXTJS framework. Considerati
 - Users can keep track of gear that they can use for their skills.
 - Integrating charts and graphs for a user's skills so a user can track their progress.
 
-# 🚧🚧 This section under construction 🚧🚧 
-
 ## How to Install and Run
 
+Dependencies
+You will need npm, Visual Studio, .NET 6, SQL Server, and whatever SQL Client you prefer (We used SQL Server Management Studio)
+
+1. git clone this repo to your local machine.
+2. Setup Firebase project for authentication. For step-by-step instructions for this process, check out this file <a href="/firebaseInstructions.md">here.</a>
+3. Navigate to the repo on your machine and run the following commands in the terminal:
+
+```
+cd Moxie-Client
+cp .sample.env .env.local
+
+```
+
+4. Update the `.env.local` file with the Firebase API keys created in the previous step.
+5. Make sure that Node.js and npm are installed on your machine. <a href="https://docs.npmjs.com/downloading-and-installing-node-js-and-npm">Click here for installation.</a>
+6. Run the following command in the terminal from the `mooch-client` directory:
+
+```
+npm install
+```
+
+7. Open your SQL Server and copy/paste the SQL script located in `Mooch-Lightning/Data` Directory
+8. Paste the script into your SQL client and run. This will create the database and schema, and create some seed data as well
+
+9.In Visual Studio, open the `Mooch-Lighting.sln`
+10. Right click on the `Dependencies` folder and select `Reload`
+11. Right click on the`Mooch-Lightning` project in the Solution Explorer and select `Manage User Secrets`
+12. Fill in the following JSON data, including the location of your database server and the firebase config data.
+
+```
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "server=<YourLocalSQLServerDatabaseConnection>;integrated security=true;Trust Server Certificate=true"
+  },
+  "FirebaseProjectId": "mooch-lightning",
+  "FirebaseConfig": {
+    "apiKey": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "authDomain": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "projectId": "XXXXXXXXXX",
+    "storageBucket": "XXXXXXXXXX",
+    "messagingSenderId": "XXXXXXXXXX",
+    "appId": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+  }
+}
+```
+13. Run the Backend from Visual Studio
+14. Run the Frontend by navigating to the `mooch-client` folder and running `npm start`
+15. The frontend should start on `http://localhost:3000/`
+
+16. Enjoy the App!
 
 ## Credits
 
